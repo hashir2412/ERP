@@ -40,9 +40,9 @@ namespace ERP.Controllers
 
         // POST api/<PurchaseController>
         [HttpPost]
-        public async Task<BaseResponse<bool>> AddPurchase([FromBody] AddPurchaseRequestModel requestModel)
+        public async Task<BaseResponse<int>> AddPurchase([FromBody] AddPurchaseRequestModel requestModel)
         {
-            _logger.LogInformation("Add Purchase");
+            _logger.LogInformation($"Add Purchase {requestModel.SupplierId}");
             return await purchaseService.AddPurchase(requestModel);
         }
 

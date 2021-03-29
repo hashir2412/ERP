@@ -2,11 +2,14 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellClickedEvent, ColDef, GridOptions, ValueFormatterParams } from 'ag-grid-community';
-import { BehaviorSubject } from 'rxjs';
+import { Message } from 'primeng-lts/api';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ItemRowViewModel } from '../inventory/inventory.viewModel';
 import { ViewItemsComponent } from '../purchase/view-items/view-items.component';
 import { AddPurchaseDialogComponent } from '../shared/add-purchase-dialog/add-purchase-dialog.component';
+import { BillType } from '../shared/add-purchase-dialog/add-purchase.enum';
 import { ConsumerSupplierRowModel } from '../shared/consumer-supplier-row.viewModel';
+import { MessageSeverity } from '../shared/message/message.enum';
 import { CommonService } from '../shared/services/common.service';
 import { SalesService } from './sales.service';
 import { SalesRowModel } from './sales.viewModel';
@@ -21,6 +24,7 @@ import { SalesRowModel } from './sales.viewModel';
 export class SalesComponent implements OnInit {
   rowData$: BehaviorSubject<SalesRowModel[]> = new BehaviorSubject<SalesRowModel[]>([]);
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  messages$: Subject<Message> = new Subject<Message>();
   constructor(private salesService: SalesService, private dialog: MatDialog,
     private datePipe: DatePipe, private commonService: CommonService) { }
   private colDef: ColDef = {
@@ -94,12 +98,27 @@ export class SalesComponent implements OnInit {
   }
 
   onOpenAddSaleDialog() {
-    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.consumerList, selectTitle: 'Consumers',sectionTitle:'Add Sales Entry' } });
+    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.consumerList, selectTitle: 'Consumers', sectionTitle: BillType.Sale } });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.loading$.next(true);
+
         this.salesService.addSale(result).subscribe(res => {
-          this.fetchSalesList();
+          if (this.commonService.isResponseValid(res)) {
+            const message = this.commonService.getMessage('Sale successfully added', 'Success', MessageSeverity.Success);
+            this.messages$.next(message);
+            // this.commonService.printInvoice(result);
+            this.fetchSalesList();
+          }
+          else {
+            const message = this.commonService.getMessage(res.errorMessage, 'Error', MessageSeverity.Error);
+            this.messages$.next(message);
+          }
+        }, err => {
+          this.loading$.next(false);
+          const message = this.commonService.getMessage(err.message, 'Error', MessageSeverity.Error);
+          this.messages$.next(message);
         });
       }
     });

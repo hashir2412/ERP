@@ -8,7 +8,7 @@ namespace ERP.Repository.Interfaces
 {
     public interface ISaleRepository
     {
-        Task<bool> AddSale(AddSaleRequestModel requestModel, double total, double totalWithoutTax);
+        Task<int> AddSale(AddSaleRequestModel requestModel, double total, double totalWithoutTax);
 
         Task<IEnumerable<SalesResponse>> GetSales();
 

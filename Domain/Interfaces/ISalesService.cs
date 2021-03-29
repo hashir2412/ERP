@@ -8,7 +8,7 @@ namespace ERP.Domain.Interfaces
 {
     public interface ISalesService
     {
-        Task<bool> AddSale(AddSaleRequestModel requestModel);
+        Task<BaseResponse<int>> AddSale(AddSaleRequestModel requestModel);
 
         Task<IEnumerable<SalesResponse>> GetSales();
 

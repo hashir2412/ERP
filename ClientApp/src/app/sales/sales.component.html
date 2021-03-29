@@ -1,5 +1,6 @@
 <app-loading [show$]="loading$"></app-loading>
 <button mat-flat-button color="primary" (click)="onOpenAddSaleDialog()">Add New Entry</button>
+<app-message [messages$]="messages$"></app-message>
 <div class="container">
     <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 100%;" [rowData]="rowData$ | async"
         [gridOptions]="gridOptions">

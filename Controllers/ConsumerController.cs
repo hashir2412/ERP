@@ -43,7 +43,7 @@ namespace ERP.Controllers
         [HttpPost]
         public async Task<BaseResponse<int>> AddConsumer(ConsumerSupplierResponseModel requestModel)
         {
-            _logger.LogInformation("Add Consumers");
+            _logger.LogInformation($"Add Consumers {requestModel.Name}");
             var result = await consumerService.AddConsumer(requestModel);
             return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }
@@ -52,7 +52,7 @@ namespace ERP.Controllers
         [HttpPut("{id}")]
         public async Task<BaseResponse<int>> UpdateConsumer(ConsumerSupplierResponseModel requestModel)
         {
-            _logger.LogInformation("Update Consumers");
+            _logger.LogInformation($"Update Consumers {requestModel.Name}");
             var result = await consumerService.UpdateConsumer(requestModel);
             return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }
@@ -61,7 +61,7 @@ namespace ERP.Controllers
         [HttpDelete("{id}")]
         public async Task<BaseResponse<int>> DeleteConsumer(int id)
         {
-            _logger.LogInformation("Delete Consumers");
+            _logger.LogInformation($"Delete Consumers {id}");
             var result = await consumerService.DeleteConsumer(id);
             return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }

@@ -14,6 +14,7 @@ namespace ERP.Infrastructure
         {
             _logger.LogError(context.Exception?.Message);
             _logger.LogError(context.Exception?.InnerException?.Message);
+
         }
     }
 }

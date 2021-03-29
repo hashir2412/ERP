@@ -19,7 +19,7 @@ namespace ERP.Domain
             inventoryRepository = inventory;
             _logger = logger;
         }
-        public async Task<BaseResponse<bool>> AddPurchase(AddPurchaseRequestModel requestModel)
+        public async Task<BaseResponse<int>> AddPurchase(AddPurchaseRequestModel requestModel)
         {
             double totalWithoutTax = 0;
             double totalWithTax = 0;
@@ -36,19 +36,19 @@ namespace ERP.Domain
                 if (res1[i] == false)
                 {
                     resultOfQuery = false;
-                    return new BaseResponse<bool>() { ErrorCode = 1, ErrorMessage = "There was some error adding the purchase", Data = false };
+                    return new BaseResponse<int>() { ErrorCode = 1, ErrorMessage = "There was some error adding the purchase", Data = 0 };
                 }
             }
             var result = await purchaseRepository.AddPurchase(requestModel, totalWithTax, totalWithoutTax);
             _logger.LogInformation("Purchase Service - Adding Purchase Successful");
-            var finalResult = result && resultOfQuery;
+            var finalResult = result > 0 && resultOfQuery;
             if (finalResult)
             {
-                return new BaseResponse<bool>() { ErrorCode = 0, ErrorMessage = "Success", Data = true };
+                return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
             }
             else
             {
-                return new BaseResponse<bool>() { ErrorCode = 1, ErrorMessage = "There was some error adding the purchase", Data = false };
+                return new BaseResponse<int>() { ErrorCode = 1, ErrorMessage = "There was some error adding the purchase", Data = 0 };
             }
         }
 

@@ -20,7 +20,7 @@ namespace ERP.Domain
             inventoryRepository = inventory;
             _logger = logger;
         }
-        public async Task<bool> AddSale(AddSaleRequestModel requestModel)
+        public async Task<BaseResponse<int>> AddSale(AddSaleRequestModel requestModel)
         {
             double totalWithoutTax = 0;
             double totalWithTax = 0;
@@ -42,7 +42,15 @@ namespace ERP.Domain
                 }
             }
             _logger.LogInformation("Sales Service - Adding Sale Successful");
-            return result && resultOfQuery;
+            var finalResult = result > 0 && resultOfQuery;
+            if (finalResult)
+            {
+                return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
+            }
+            else
+            {
+                return new BaseResponse<int>() { ErrorCode = 1, ErrorMessage = "There was some error adding the sale", Data = 0 };
+            }
         }
 
         public async Task<IEnumerable<SalesResponse>> GetSales()

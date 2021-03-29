@@ -40,18 +40,18 @@ namespace ERP.Controllers
 
         // POST api/<PurchaseController>
         [HttpPost]
-        public async Task<BaseResponse<bool>> AddSale([FromBody] AddSaleRequestModel requestModel)
+        public async Task<BaseResponse<int>> AddSale([FromBody] AddSaleRequestModel requestModel)
         {
             for (int i = 0; i < requestModel.Items.Count; i++)
             {
                 if (requestModel.Items[i].RequestedQuantity > requestModel.Items[i].Quantity)
                 {
-                    return new BaseResponse<bool>() { ErrorCode = 1, ErrorMessage = $"Requested quantity more than the existing quantity for item {requestModel.Items[i].Name} {requestModel.Items[i].QuantityValue} {requestModel.Items[i].QuantityName}", Data = false };
+                    return new BaseResponse<int>() { ErrorCode = 1, ErrorMessage = $"Requested quantity more than the existing quantity for item {requestModel.Items[i].Name} {requestModel.Items[i].QuantityValue} {requestModel.Items[i].QuantityName}", Data = 0 };
                 }
             }
             _logger.LogInformation("Add Sale");
             var result = await salesService.AddSale(requestModel);
-            return new BaseResponse<bool>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
+            return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }
 
         // PUT api/<PurchaseController>/5

@@ -25,6 +25,7 @@ namespace ERP.Domain
             var result = await GetItems();
             for (int i = 0; i < requestModel.Count; i++)
             {
+                _logger.LogInformation($"Items {requestModel[i].Name} {requestModel[i].QuantityValue} {requestModel[i].QuantityName}");
                 var itemName = requestModel[i].QuantityName + requestModel[i].QuantityValue + requestModel[i].Name;
                 var duplicateEntry = result.FirstOrDefault(item => item.QuantityName + item.QuantityValue + item.Name == itemName);
                 if (duplicateEntry != null)

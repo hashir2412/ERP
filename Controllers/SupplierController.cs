@@ -42,22 +42,23 @@ namespace ERP.Controllers
         [HttpPost]
         public async Task<BaseResponse<int>> AddSupplier([FromBody]ConsumerSupplierResponseModel requestModel)
         {
-            _logger.LogInformation("Add Supplier");
+            _logger.LogInformation($"Add Supplier {requestModel.Name} {requestModel.GSTIN}");
             var result = await supplierService.AddSupplier(requestModel);
             return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }
 
         [HttpPut]
-        public async Task<int> UpdateSupplier(ConsumerSupplierResponseModel requestModel)
+        public async Task<BaseResponse<int>> UpdateSupplier(ConsumerSupplierResponseModel requestModel)
         {
-            _logger.LogInformation("Update Supplier");
-            return await supplierService.UpdateSupplier(requestModel);
+            _logger.LogInformation($"Update Supplier {requestModel.Name} {requestModel.GSTIN}");
+            var result = await supplierService.UpdateSupplier(requestModel);
+            return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
         }
 
         [HttpDelete]
         public async Task<int> DeleteSupplier(int supplierId)
         {
-            _logger.LogInformation("Delete Supplier");
+            _logger.LogInformation($"Delete Supplier {supplierId}");
             return await supplierService.DeleteSupplier(supplierId);
         }
     }

@@ -20,11 +20,11 @@ export class PurchaseService {
         return this.http.get<ResponseModel<PurchaseCartModel[]>>(ApiUrl.purchaseApi);
     }
 
-    addPurchase(addPurchaseViewModel: AddPurchaseModel): Observable<ResponseModel<boolean>> {
+    addPurchase(addPurchaseViewModel: AddPurchaseModel): Observable<ResponseModel<number>> {
         const requestModel: AddPurchaseRequestModel = {
             supplierId: addPurchaseViewModel.supplier.id,
             items: addPurchaseViewModel.items
         };
-        return this.http.post<ResponseModel<boolean>>(ApiUrl.purchaseApi, requestModel);
+        return this.http.post<ResponseModel<number>>(ApiUrl.purchaseApi, requestModel);
     }
 }

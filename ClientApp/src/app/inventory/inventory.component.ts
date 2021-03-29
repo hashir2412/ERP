@@ -16,6 +16,8 @@ export class InventoryComponent implements OnInit {
 
   rowData$: BehaviorSubject<ItemRowViewModel[]> = new BehaviorSubject<ItemRowViewModel[]>([]);
   gridApi: GridApi;
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(private inventoryService: InventoryService, private dialog: MatDialog) { }
   gridOptions: GridOptions = {
     pagination: true,
@@ -42,17 +44,32 @@ export class InventoryComponent implements OnInit {
       headerName: 'Value Of Measurement',
       field: 'quantityValue',
       sortable: true, filter: true
+    },
+    {
+      headerName: 'Price Without Tax',
+      field: 'priceWithoutTax',
+      sortable: true, filter: true
     }, {
       headerName: 'GST(%)',
       field: 'gst',
       sortable: true, filter: true
-    }, {
+    },
+    {
       headerName: 'Price With Tax',
       field: 'priceWithTax',
       sortable: true, filter: true
-    }],
-    onGridReady : (event:GridReadyEvent) => {
-     this.gridApi = event.api;
+    },
+    {
+      headerName: 'Selling Price Without Tax',
+      field: 'sellingPriceWithoutTax',
+      sortable: true, filter: true
+    }, {
+      headerName: 'Selling Price With Tax',
+      field: 'sellingPriceWithTax',
+      sortable: true, filter: true
+    },],
+    onGridReady: (event: GridReadyEvent) => {
+      this.gridApi = event.api;
     },
     onRowDataChanged: (e: RowDataChangedEvent) => {
       e.api.hideOverlay();
@@ -62,7 +79,7 @@ export class InventoryComponent implements OnInit {
     this.getItems(false);
   }
 
-  getItems(refresh: boolean){
+  getItems(refresh: boolean) {
     this.gridApi && this.gridApi.showLoadingOverlay();
     this.inventoryService.getItems(refresh).subscribe(res => {
       this.rowData$.next(res);
@@ -73,15 +90,19 @@ export class InventoryComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEditInventoryDialogComponent, { data: { items: this.rowData$.value, title: 'Add New Item' } });
 
     dialogRef.afterClosed().subscribe((result: ItemRowViewModel) => {
-      if(result){
+      if (result) {
+        this.loading$.next(true);
         this.inventoryService.addItem(result).subscribe(res => {
+          this.loading$.next(false);
           this.getItems(true);
+        }, err => {
+          this.loading$.next(false);
         });
       }
     });
   }
 
-  onRefresh(){
+  onRefresh() {
     this.getItems(true);
   }
 }

@@ -19,40 +19,34 @@ namespace ERP.Repository
         {
             _mapper = mapper;
         }
-        public async Task<bool> AddSale(AddSaleRequestModel requestModel, double total, double totalWithoutTax)
+        public async Task<int> AddSale(AddSaleRequestModel requestModel, double total, double totalWithoutTax)
         {
 
             using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
             {
-                try
+
+                var id = $"INSERT INTO SalesOrder (ConsumerID,SaleDate,Total,TotalWithoutTax)" +
+                $" VALUES (@ConsumerID,@SaleDate,@Total,@TotalWithoutTax); SELECT CAST(SCOPE_IDENTITY() as int);";
+                var salesOrderResult = await connection.ExecuteScalarAsync<int>(id, new
                 {
-                    var id = $"INSERT INTO SalesOrder (ConsumerID,SaleDate,Total,TotalWithoutTax)" +
-                    $" VALUES (@ConsumerID,@SaleDate,@Total,@TotalWithoutTax); SELECT CAST(SCOPE_IDENTITY() as int);";
-                    var salesOrderResult = await connection.ExecuteScalarAsync<int>(id, new
+                    ConsumerID = requestModel.ConsumerId,
+                    SaleDate = DateTime.Now,
+                    Total = total,
+                    TotalWithoutTax = totalWithoutTax
+                });
+                int result = 0;
+                foreach (var item in requestModel.Items)
+                {
+                    var sql = $"INSERT INTO SalesCart (SalesOrderID,ItemID,Quantity) VALUES(@SalesOrderID, @ItemID,@Quantity); SELECT CAST(SCOPE_IDENTITY() as int);";
+                    var SalesCartResult = await connection.ExecuteScalarAsync<int>(sql, new
                     {
-                        ConsumerID = requestModel.ConsumerId,
-                        SaleDate = DateTime.Now,
-                        Total = total,
-                        TotalWithoutTax = totalWithoutTax
+                        SalesOrderID = salesOrderResult,
+                        ItemID = item.Id,
+                        Quantity = item.RequestedQuantity
                     });
-                    foreach (var item in requestModel.Items)
-                    {
-                        var sql = $"INSERT INTO SalesCart (SalesOrderID,ItemID,Quantity) VALUES(@SalesOrderID, @ItemID,@Quantity); SELECT CAST(SCOPE_IDENTITY() as int);";
-                        var SalesCartResult = await connection.ExecuteScalarAsync<int>(sql, new
-                        {
-                            SalesOrderID = salesOrderResult,
-                            ItemID = item.Id,
-                            Quantity = item.RequestedQuantity
-                        });
-                    }
+                    result = SalesCartResult;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-
-
-                return true;
+                return result;
             }
         }
 

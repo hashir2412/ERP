@@ -1,5 +1,6 @@
 <button mat-flat-button color="primary" (click)="onAddNewItem()">Add New Item</button>
 <button mat-flat-button color="primary" (click)="onRefresh()">Refresh</button>
+<app-loading [show$]="loading$"></app-loading>
 <div class="container">
     <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 100%;" [rowData]="rowData$ | async"
         [gridOptions]="gridOptions">

@@ -8,7 +8,7 @@ namespace ERP.Domain.Interfaces
 {
     public interface IPurchaseService
     {
-        Task<BaseResponse<bool>> AddPurchase(AddPurchaseRequestModel requestModel);
+        Task<BaseResponse<int>> AddPurchase(AddPurchaseRequestModel requestModel);
 
         Task<IEnumerable<PurchasesResponse>> GetPurchases();
 

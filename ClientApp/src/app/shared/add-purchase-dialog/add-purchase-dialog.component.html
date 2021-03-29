@@ -2,6 +2,7 @@
 <div mat-dialog-content>
     <form #myForm="ngForm">
         <div fxLayout="column">
+            <app-message [messages$]="messages$"></app-message>
             <mat-form-field>
                 <mat-label>{{data.selectTitle}}</mat-label>
                 <mat-select required [(ngModel)]="addPurchaseModel.supplier" name="food">
@@ -33,8 +34,31 @@
                         <input matInput required type="number" name="quantity-{{i}}"
                             (change)="calculateTotalAndSubTotal()" [(ngModel)]="item.requestedQuantity">
                     </mat-form-field>
-                    <h4> GST {{item.gst}}% </h4>
-                    <h4> Price per item {{item.priceWithoutTax}}</h4>
+                    <div fxLayout="column">
+                        <h4>Available Quantity</h4>
+                        <h5>{{item.quantity}}</h5>
+                    </div>
+                    <div fxLayout="column">
+                        <h4>GST %</h4>
+                        <h5>{{item.gst}}</h5>
+                    </div>
+                    <div fxLayout="column">
+                        <h4>Price per item</h4>
+                        <h5>{{item.priceWithoutTax}}</h5>
+                    </div>
+                    <div fxLayout="column">
+                        <h4>Item Subtotal</h4>
+                        <h5>{{item.subTotal}}</h5>
+                    </div>
+                    <div fxLayout="column">
+                        <h4>Item Tax</h4>
+                        <h5>{{item.total - item.subTotal}}</h5>
+                    </div>
+                    <div fxLayout="column">
+                        <h4>Item Total</h4>
+                        <h5>{{item.total}}</h5>
+                    </div>
+                    
                     <button mat-stroked-button color="warn" [disabled]="addPurchaseModel.items.length === 1"
                         aria-label="Example icon button with a plus one icon" (click)="removeItem(i)">
                         Delete Item

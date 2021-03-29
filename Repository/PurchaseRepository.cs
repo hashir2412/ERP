@@ -21,7 +21,7 @@ namespace ERP.Repository
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<bool> AddPurchase(AddPurchaseRequestModel requestModel, double total, double totalWithoutTax)
+        public async Task<int> AddPurchase(AddPurchaseRequestModel requestModel, double total, double totalWithoutTax)
         {
             using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
             {
@@ -37,6 +37,7 @@ namespace ERP.Repository
                 });
                 _logger.LogInformation($"Purchase Repository - Inserted into Purchase Order, Supplier - {requestModel.SupplierId}, Date {DateTime.Now}" +
                     $"Total {total} TotalWithoutTax {totalWithoutTax}");
+                int result = 0;
                 foreach (var item in requestModel.Items)
                 {
                     var sql = $"INSERT INTO PurchaseCart (PurchaseOrderID,ItemID,Quantity) VALUES(@PurchaseOrderID, @ItemID,@Quantity); SELECT CAST(SCOPE_IDENTITY() as int);";
@@ -46,10 +47,11 @@ namespace ERP.Repository
                         ItemID = item.Id,
                         Quantity = item.RequestedQuantity
                     });
+                    result = purchaseCartResult;
                 }
                 _logger.LogInformation("Purchase Repository - Inserted into Purchase Cart");
 
-                return true;
+                return result;
             }
         }
 

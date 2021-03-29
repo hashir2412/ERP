@@ -1,4 +1,5 @@
 export class ItemRowViewModel {
+    number?:number;
     id?: number;
     name: string;
     description: string;
@@ -12,6 +13,8 @@ export class ItemRowViewModel {
     requestedQuantity?: number;
     sellingPriceWithoutTax: number;
     sellingPriceWithTax: number;
+    subTotal: number;
+    total: number;
 }
 
 

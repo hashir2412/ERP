@@ -13,6 +13,8 @@ import { ViewItemsComponent } from './view-items/view-items.component';
 import { CommonService } from '../shared/services/common.service';
 import { Message } from 'primeng-lts';
 import { MessageSeverity } from '../shared/message/message.enum';
+import { BillType } from '../shared/add-purchase-dialog/add-purchase.enum';
+import { AddPurchaseModel } from '../shared/add-purchase-dialog/add-purchase.viewModel';
 
 @Component({
   selector: 'app-purchase',
@@ -107,14 +109,17 @@ export class PurchaseComponent implements OnInit {
   }
 
   onOpenAddPurchaseDialog() {
-    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.supplierList, selectTitle: 'Suppliers', sectionTitle: 'Add Purchase Entry' } });
+    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.supplierList, selectTitle: 'Suppliers', sectionTitle: BillType.Purchase } });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: AddPurchaseModel) => {
       if (result) {
+        this.loading$.next(true);
         this.purchaseService.addPurchase(result).subscribe(res => {
+          this.loading$.next(false);
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Purchase successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
+            this.commonService.printInvoice(res.data,result);
             this.fetchPurchaseList();
           }
           else {
@@ -122,6 +127,7 @@ export class PurchaseComponent implements OnInit {
             this.messages$.next(message);
           }
         }, err => {
+          this.loading$.next(false);
           const message = this.commonService.getMessage(err.message, 'Error', MessageSeverity.Error);
           this.messages$.next(message);
         }
