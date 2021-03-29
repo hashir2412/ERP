@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+    <div mat-dialog-content>
+        <h4 *ngIf="showDuplicateErrorMessage" style="color: red;">Duplicate record found</h4>
+        <div fxLayout="column">
+            <ng-container *ngFor="let field of inputFields">
+                <div [ngSwitch]="field.type">
+                    <mat-form-field *ngSwitchCase="inputType.Text">
+                        <mat-label>{{field.headerName}}</mat-label>
+                        <input matInput [required]="field.required" name="txt-{{field.headerName}}" [disabled]="field.isDisabled"
+                            [(ngModel)]="newItem[field.field]">
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="inputType.Number">
+                        <mat-label>{{field.headerName}}</mat-label>
+                        <input matInput [required]="field.required" name="number-txt-{{field.headerName}}" [disabled]="field.isDisabled" type="number"
+                            [(ngModel)]="newItem[field.field]">
+                    </mat-form-field>
+                    <mat-form-field *ngSwitchCase="inputType.DropDown">
+                        <mat-label>{{field.headerName}}</mat-label>
+                        <mat-select [required]="field.required" name="select-{{field.headerName}}" [(ngModel)]="newItem[field.field]"
+                            [name]="field.headerName">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let selectionItem of field.selectionValues"
+                                [value]="selectionItem.value">
+                                {{selectionItem.headerName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <mat-form-field>
+                <mat-label>Cost Price (Without Tax)</mat-label>
+                <input (change)="onCalculateTotalPrice()" min="0" matInput required type="number"
+                    [(ngModel)]="newItem.priceWithoutTax" name="txt-Cost Price (Without Tax)">
+            </mat-form-field>
+            <mat-form-field>
+                <span matPrefix>% &nbsp;</span>
+                <mat-label>GST</mat-label>
+                <input (change)="onCalculateTotalPrice()" matInput min="0" required type="number"
+                    [(ngModel)]="newItem.gst" name="txt-GST"> 
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Cost Price(With Tax)</mat-label>
+                <input matInput disabled type="number" name="txt-Cost Price(With Tax)" [(ngModel)]="newItem.priceWithTax">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Selling Price (Without Tax)</mat-label>
+                <input (change)="onCalculateTotalPrice()" name="txt-Selling Price(Without Tax)" min="0" matInput required type="number"
+                    [(ngModel)]="newItem.sellingPriceWithoutTax">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Selling Price(With Tax)</mat-label>
+                <input matInput disabled type="number" min="0" name="txt-Selling Price(With Tax)" [(ngModel)]="newItem.sellingPriceWithTax">
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" cdkFocusInitial>Save</button>
+    </div>
+</form>

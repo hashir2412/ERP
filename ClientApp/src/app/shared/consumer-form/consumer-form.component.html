@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+    <div mat-dialog-content>
+        <mat-form-field *ngFor="let field of inputFields">
+            <mat-label>{{field.headerName}}</mat-label>
+            <input matInput #input [(ngModel)]="data.formData[field.field]" [name]="field.headerName"
+                [required]="field.required">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button type="button" mat-button (click)="onNoClick()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary" cdkFocusInitial>Save</button>
+    </div>
+</form>

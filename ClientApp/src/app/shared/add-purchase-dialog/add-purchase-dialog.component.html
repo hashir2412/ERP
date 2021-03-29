@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>{{data.sectionTitle}}</h1>
+<div mat-dialog-content>
+    <form #myForm="ngForm">
+        <div fxLayout="column">
+            <mat-form-field>
+                <mat-label>{{data.selectTitle}}</mat-label>
+                <mat-select required [(ngModel)]="addPurchaseModel.supplier" name="food">
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let supplier of data.suppliers" [value]="supplier">
+                        {{supplier.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="addPurchaseModel.supplier">
+                <h5>GST No. {{addPurchaseModel.supplier.gstin}}</h5>
+                <h5>Address {{addPurchaseModel.supplier.address}}</h5>
+                <div>
+                    <h5> Cant find the suppier in the above dropdown? Add new supplier from Suppliers tab</h5>
+                </div>
+                <h3>Items</h3>
+                <div fxLayout="row" fxLayoutGap="10px"
+                    *ngFor="let item of addPurchaseModel.items;index as i;last as isLast">
+                    <mat-form-field>
+                        <mat-label>Items</mat-label>
+                        <mat-select required [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}">
+                            <mat-option *ngFor="let itemName of items" [value]="itemName">
+                                {{itemName.name}} {{itemName.quantityName}} {{itemName.quantityValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Quantity</mat-label>
+                        <input matInput required type="number" name="quantity-{{i}}"
+                            (change)="calculateTotalAndSubTotal()" [(ngModel)]="item.requestedQuantity">
+                    </mat-form-field>
+                    <h4> GST {{item.gst}}% </h4>
+                    <h4> Price per item {{item.priceWithoutTax}}</h4>
+                    <button mat-stroked-button color="warn" [disabled]="addPurchaseModel.items.length === 1"
+                        aria-label="Example icon button with a plus one icon" (click)="removeItem(i)">
+                        Delete Item
+                    </button>
+                    <button mat-stroked-button color="primary" *ngIf="isLast"
+                        aria-label="Example icon button with a plus one icon" (click)="onAddItems()">
+                        Add Item
+                    </button>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="end">
+                    <div fxLayout="column" fxLayoutGap="10px">
+                        <h4>Subtotal {{subTotal}}</h4>
+                        <h4>GST {{gst}}</h4>
+                        <h4>Total {{total}}</h4>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSubmit(myForm)" cdkFocusInitial>Save</button>
+</div>
