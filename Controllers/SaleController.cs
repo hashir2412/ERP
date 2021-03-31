@@ -51,7 +51,7 @@ namespace ERP.Controllers
             }
             _logger.LogInformation("Add Sale");
             var result = await salesService.AddSale(requestModel);
-            return new BaseResponse<int>() { ErrorCode = 0, ErrorMessage = "Success", Data = result };
+            return result;
         }
 
         // PUT api/<PurchaseController>/5

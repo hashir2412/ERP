@@ -7,7 +7,7 @@ import { ConsumerSupplierRowModel } from '../shared/consumer-supplier-row.viewMo
 import { AddPurchaseDialogComponent } from '../shared/add-purchase-dialog/add-purchase-dialog.component';
 import { PurchaseService } from './purchase.service';
 import { PurchaseRowModel } from './purchase.viewModel';
-import { ItemRowViewModel } from '../inventory/inventory.viewModel';
+import { ItemRowViewModel, MeasureQuantityName } from '../inventory/inventory.viewModel';
 import { DatePipe } from '@angular/common';
 import { ViewItemsComponent } from './view-items/view-items.component';
 import { CommonService } from '../shared/services/common.service';
@@ -108,6 +108,17 @@ export class PurchaseComponent implements OnInit {
     });
   }
 
+  onPrint() {
+    // const result: AddPurchaseModel = {
+    //   items: [{
+    //     description: 'd1', gst: 3, priceWithoutTax: 4, quantityName: MeasureQuantityName.Gram, quantityValue: 'test v',
+    //     name: 'rajma', total: 30, priceWithTax: 25, quantity: 3, rawName: 'ad', sellingPriceWithTax: 40, sellingPriceWithoutTax: 30, subTotal: 20
+    //   }],
+    //   supplier: { address: '1asd, ayolo,asd,aaaaasd', description: 'd2', gstin: 'asd', name: 'abc supplier', id: 2 }
+    // };
+    // this.commonService.printInvoice(2, result);
+  }
+
   onOpenAddPurchaseDialog() {
     const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.supplierList, selectTitle: 'Suppliers', sectionTitle: BillType.Purchase } });
 
@@ -119,7 +130,7 @@ export class PurchaseComponent implements OnInit {
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Purchase successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
-            this.commonService.printInvoice(res.data,result);
+            this.commonService.printInvoice(res.data, result);
             this.fetchPurchaseList();
           }
           else {

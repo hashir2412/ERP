@@ -12,4 +12,6 @@ export class AddItemRequestModel {
     priceWithTax: number;
     requestedQuantity?: number;
     subtractedQuantity?: number;
+    sellingPriceWithoutTax: number;
+    sellingPriceWithTax: number;
 }

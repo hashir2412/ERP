@@ -4,4 +4,6 @@ import { ConsumerSupplierRowModel } from "src/app/shared/consumer-supplier-row.v
 export class AddPurchaseModel {
     supplier: ConsumerSupplierRowModel;
     items: ItemRowViewModel[] = [new ItemRowViewModel()];
+    subTotal?: number;
+    total?: number;
 }

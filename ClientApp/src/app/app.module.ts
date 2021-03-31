@@ -33,6 +33,7 @@ import { CommonService } from './shared/services/common.service';
 import { MessageComponent } from './shared/message/message.component';
 import { ConsumersService } from './consumers/consumers.service';
 import { MessageModule, MessagesModule } from 'primeng-lts';
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,7 +70,7 @@ import { MessageModule, MessagesModule } from 'primeng-lts';
     MessageModule
   ],
   entryComponents: [ConsumerFormComponent],
-  providers: [AppMemoryStoreService, SupplierService, InventoryService, ConsumersService, CommonService],
+  providers: [AppMemoryStoreService, SupplierService, InventoryService, ConsumersService, CommonService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

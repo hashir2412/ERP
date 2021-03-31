@@ -55,6 +55,8 @@ export class AddPurchaseDialogComponent implements OnInit {
   onSubmit(form: NgForm) {
     form.control.markAsDirty();
     if (form.valid) {
+      this.addPurchaseModel.subTotal = this.subTotal;
+      this.addPurchaseModel.total = this.total;
       if (this.data.sectionTitle === BillType.Sale) {
         if (this.validationForSalePassed()) {
           this.dialogRef.close(this.addPurchaseModel);
@@ -84,10 +86,19 @@ export class AddPurchaseDialogComponent implements OnInit {
     this.subTotal = 0;
     this.gst = 0;
     this.addPurchaseModel.items.forEach(item => {
-      item.subTotal = item.priceWithoutTax * item.requestedQuantity;
-      item.total = item.priceWithTax * item.requestedQuantity;
-      this.subTotal = this.subTotal + (item.priceWithoutTax * item.requestedQuantity);
-      this.total = this.total + (item.priceWithTax * item.requestedQuantity);
+      if (this.data.selectTitle === BillType.Purchase) {
+        item.subTotal = item.priceWithoutTax * item.requestedQuantity;
+        item.total = item.priceWithTax * item.requestedQuantity;
+        this.subTotal = this.subTotal + (item.priceWithoutTax * item.requestedQuantity);
+        this.total = this.total + (item.priceWithTax * item.requestedQuantity);
+      }
+      else {
+        item.sellingPriceSubTotal = item.sellingPriceWithoutTax * item.requestedQuantity;
+        item.sellingPriceTotal = item.sellingPriceWithTax * item.requestedQuantity;
+        this.subTotal = this.subTotal + (item.sellingPriceWithoutTax * item.requestedQuantity);
+        this.total = this.total + (item.sellingPriceWithTax * item.requestedQuantity);
+      }
+
       this.gst = this.total - this.subTotal;
     });
   }

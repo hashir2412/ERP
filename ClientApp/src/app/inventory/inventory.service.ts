@@ -24,7 +24,8 @@ export class InventoryService {
     addItem(item: ItemRowViewModel): Observable<boolean[]> {
         const requestModel: AddItemRequestModel = {
             description: item.description, gst: item.gst, quantityName: item.quantityName, quantityValue: item.quantityValue,
-            name: item.name, priceWithTax: item.priceWithTax, priceWithoutTax: item.priceWithoutTax, quantity: item.quantity
+            name: item.name, priceWithTax: item.priceWithTax, priceWithoutTax: item.priceWithoutTax, quantity: item.quantity,
+            sellingPriceWithTax: item.sellingPriceWithTax, sellingPriceWithoutTax: item.sellingPriceWithoutTax
         }
         return this.http.post<boolean[]>(ApiUrl.inventoryApi, [requestModel]);
 

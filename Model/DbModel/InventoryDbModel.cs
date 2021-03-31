@@ -19,5 +19,10 @@
         public string RawName { get; set; }
 
         public int RequestedQuantity { get; set; }
+
+        public double SellingPriceWithTax { get; set; }
+
+        public double SellingPriceWithoutTax { get; set; }
+
     }
 }

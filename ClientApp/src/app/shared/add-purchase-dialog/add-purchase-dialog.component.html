@@ -42,22 +42,43 @@
                         <h4>GST %</h4>
                         <h5>{{item.gst}}</h5>
                     </div>
-                    <div fxLayout="column">
-                        <h4>Price per item</h4>
-                        <h5>{{item.priceWithoutTax}}</h5>
-                    </div>
-                    <div fxLayout="column">
-                        <h4>Item Subtotal</h4>
-                        <h5>{{item.subTotal}}</h5>
-                    </div>
-                    <div fxLayout="column">
-                        <h4>Item Tax</h4>
-                        <h5>{{item.total - item.subTotal}}</h5>
-                    </div>
-                    <div fxLayout="column">
-                        <h4>Item Total</h4>
-                        <h5>{{item.total}}</h5>
-                    </div>
+                    <ng-container *ngIf="data.sectionTitle !== billType.Sale">
+                        <div fxLayout="column">
+                            <h4>Price per item</h4>
+                            <h5>{{item.priceWithoutTax}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Subtotal</h4>
+                            <h5>{{item.subTotal}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Tax</h4>
+                            <h5>{{item.total - item.subTotal}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Total</h4>
+                            <h5>{{item.total}}</h5>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.sectionTitle === billType.Sale">
+                        <div fxLayout="column">
+                            <h4>Price per item</h4>
+                            <h5>{{item.sellingPriceWithoutTax}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Subtotal</h4>
+                            <h5>{{item.sellingPriceSubTotal}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Tax</h4>
+                            <h5>{{item.sellingPriceTotal - item.sellingPriceSubTotal}}</h5>
+                        </div>
+                        <div fxLayout="column">
+                            <h4>Item Total</h4>
+                            <h5>{{item.sellingPriceTotal}}</h5>
+                        </div>
+                    </ng-container>
+                    
                     
                     <button mat-stroked-button color="warn" [disabled]="addPurchaseModel.items.length === 1"
                         aria-label="Example icon button with a plus one icon" (click)="removeItem(i)">

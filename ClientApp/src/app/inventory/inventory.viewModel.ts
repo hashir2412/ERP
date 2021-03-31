@@ -15,6 +15,8 @@ export class ItemRowViewModel {
     sellingPriceWithTax: number;
     subTotal: number;
     total: number;
+    sellingPriceSubTotal: number;
+    sellingPriceTotal: number;
 }
 
 
