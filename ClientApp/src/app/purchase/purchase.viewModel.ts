@@ -8,4 +8,5 @@ export class PurchaseRowModel {
     total: number;
     totalWithoutTax: number;
     supplierName: string;
+    supplier: ConsumerSupplierRowModel;
 }

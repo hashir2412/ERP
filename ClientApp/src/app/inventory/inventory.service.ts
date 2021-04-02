@@ -6,7 +6,7 @@ import { DataStoreKeys } from "../core/data-store-keys";
 import { AppMemoryStoreService } from "../shared/services/app-memory-store";
 import { AddItemRequestModel } from "./inventory.model";
 import { ItemRowViewModel as ItemRowViewModel } from "./inventory.viewModel";
-
+import * as deepClone from 'lodash';
 @Injectable()
 export class InventoryService {
     constructor(private http: HttpClient, private store: AppMemoryStoreService) {
@@ -16,7 +16,7 @@ export class InventoryService {
             return this.getItemsList();
         }
         else {
-            let data: ItemRowViewModel[] = this.store.get<ItemRowViewModel[]>(DataStoreKeys.InventoryKey);
+            let data: ItemRowViewModel[] = deepClone.cloneDeep(this.store.get<ItemRowViewModel[]>(DataStoreKeys.InventoryKey));
             return data ? of(data) : this.getItemsList();
         }
     }

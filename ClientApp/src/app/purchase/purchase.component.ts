@@ -38,7 +38,12 @@ export class PurchaseComponent implements OnInit {
     defaultColDef: this.colDef,
     pagination: true,
     paginationAutoPageSize: true,
-    columnDefs: [{
+    columnDefs: [
+      {
+        headerName: 'Invoice Number',
+        field: 'id'
+      },
+      {
       headerName: 'Supplier Name',
       field: 'supplierName'
     }, {
@@ -64,6 +69,19 @@ export class PurchaseComponent implements OnInit {
       cellStyle: { color: 'blue', cursor: 'pointer' },
       onCellClicked: (event: CellClickedEvent) => {
         this.onOpenViewItems(event.data.items);
+      }
+    },
+    {
+      filter: false,
+      valueGetter: () => {
+        return 'Print Invoice';
+      },
+      cellStyle: { color: 'blue', cursor: 'pointer' },
+      onCellClicked: (event: CellClickedEvent) => {
+        const data = event.data as PurchaseRowModel;
+        this.loading$.next(true);
+        this.commonService.printInvoice(data.id, { items: data.items, supplier: data.supplier, subTotal: data.totalWithoutTax, total: data.total }, BillType.Purchase);
+        this.loading$.next(false);
       }
     }]
   };
@@ -92,7 +110,8 @@ export class PurchaseComponent implements OnInit {
             purchaseDate: cart.cart.purchaseOrder.purchaseDate,
             supplierName: cart.cart.purchaseOrder.supplier.name,
             total: cart.cart.purchaseOrder.total,
-            totalWithoutTax: cart.cart.purchaseOrder.totalWithoutTax
+            totalWithoutTax: cart.cart.purchaseOrder.totalWithoutTax,
+            supplier: cart.cart.purchaseOrder.supplier
           };
           rows.push(row);
         });
@@ -106,17 +125,6 @@ export class PurchaseComponent implements OnInit {
       const message = this.commonService.getMessage(err.message, 'Error', MessageSeverity.Error);
       this.messages$.next(message);
     });
-  }
-
-  onPrint() {
-    const result: AddPurchaseModel = {
-      items: [{
-        description: 'd1', gst: 3, priceWithoutTax: 4, quantityName: MeasureQuantityName.Gram, quantityValue: 'test v',
-        name: 'rajma', total: 30, priceWithTax: 25, quantity: 3, rawName: 'ad', sellingPriceWithTax: 40, sellingPriceWithoutTax: 30, subTotal: 20, sellingPriceSubTotal: 2, sellingPriceTotal: 10
-      }],
-      supplier: { address: '1asd, ayolo,asd,aaaaasd', description: 'd2', gstin: 'asd', name: 'abc supplier', id: 2 }
-    };
-    this.commonService.printInvoice(2, result, BillType.Purchase);
   }
 
   onOpenAddPurchaseDialog() {

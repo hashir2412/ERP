@@ -8,6 +8,7 @@ import { ConsumerSupplierRowModel } from "../shared/consumer-supplier-row.viewMo
 import { ResponseModel } from "../shared/response.model";
 import { AppMemoryStoreService } from "../shared/services/app-memory-store";
 import { CommonService } from "../shared/services/common.service";
+import * as deepClone from 'lodash';
 
 @Injectable()
 export class ConsumersService {
@@ -18,7 +19,7 @@ export class ConsumersService {
             return this.getConsumersList();
         }
         else {
-            let data: ConsumerSupplierRowModel[] = this.store.get<ConsumerSupplierRowModel[]>(DataStoreKeys.ConsumerKey);
+            let data: ConsumerSupplierRowModel[] = deepClone.cloneDeep(this.store.get<ConsumerSupplierRowModel[]>(DataStoreKeys.ConsumerKey));
             return data ? of({ data: data, errorCode: 0, errorMessage: '' }) : this.getConsumersList();
         }
         // return this.http.get<ResponseModel<ConsumerSupplierRowModel[]>>(ApiUrl.consumerapi);

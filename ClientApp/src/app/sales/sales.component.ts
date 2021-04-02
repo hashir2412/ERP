@@ -36,34 +36,52 @@ export class SalesComponent implements OnInit {
     defaultColDef: this.colDef,
     pagination: true,
     paginationAutoPageSize: true,
-    columnDefs: [{
-      headerName: 'Supplier Name',
-      field: 'consumerName'
-    }, {
-      headerName: 'Sale Date',
-      field: 'saleDate',
-      valueFormatter: (params: ValueFormatterParams) => {
-        return this.datePipe.transform(params.value, 'MMM d, y, h:mm:ss a');
-      }
-    }, {
-      headerName: 'Total',
-      field: 'total'
-    },
-    {
-      headerName: 'Total Without Tax',
-      field: 'totalWithoutTax'
-    },
-    {
-      headerName: 'Items',
-      filter: false,
-      valueGetter: () => {
-        return 'View Items';
+    columnDefs: [
+      {
+        headerName: 'Invoice Number',
+        field: 'id'
       },
-      cellStyle: { color: 'blue', cursor: 'pointer' },
-      onCellClicked: (event: CellClickedEvent) => {
-        this.onOpenViewItems(event.data.items);
-      }
-    }]
+      {
+        headerName: 'Customer Name',
+        field: 'consumerName'
+      }, {
+        headerName: 'Sale Date',
+        field: 'saleDate',
+        valueFormatter: (params: ValueFormatterParams) => {
+          return this.datePipe.transform(params.value, 'MMM d, y, h:mm:ss a');
+        }
+      }, {
+        headerName: 'Total',
+        field: 'total'
+      },
+      {
+        headerName: 'Total Without Tax',
+        field: 'totalWithoutTax'
+      },
+      {
+        headerName: 'Items',
+        filter: false,
+        valueGetter: () => {
+          return 'View Items';
+        },
+        cellStyle: { color: 'blue', cursor: 'pointer' },
+        onCellClicked: (event: CellClickedEvent) => {
+          this.onOpenViewItems(event.data.items);
+        }
+      },
+      {
+        filter: false,
+        valueGetter: () => {
+          return 'Print Invoice';
+        },
+        cellStyle: { color: 'blue', cursor: 'pointer' },
+        onCellClicked: (event: CellClickedEvent) => {
+          const data = event.data as SalesRowModel;
+          this.loading$.next(true);
+          this.commonService.printInvoice(data.id, { items: data.items, supplier: data.customer, subTotal: data.totalWithoutTax, total: data.total }, BillType.Sale);
+          this.loading$.next(false);
+        }
+      }]
   };
   consumerList: ConsumerSupplierRowModel[];
   ngOnInit(): void {
@@ -89,7 +107,8 @@ export class SalesComponent implements OnInit {
           saleDate: cart.cart.saleOrder.saleDate,
           consumerName: cart.cart.saleOrder.consumer.name,
           total: cart.cart.saleOrder.total,
-          totalWithoutTax: cart.cart.saleOrder.totalWithoutTax
+          totalWithoutTax: cart.cart.saleOrder.totalWithoutTax,
+          customer: cart.cart.saleOrder.consumer
         };
         rows.push(row);
       });
