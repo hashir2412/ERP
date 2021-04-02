@@ -108,7 +108,7 @@ export class SalesComponent implements OnInit {
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Sale successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
-            // this.commonService.printInvoice(result);
+            this.commonService.printInvoice(res.data, result, BillType.Purchase);
             this.fetchSalesList();
           }
           else {
@@ -127,6 +127,10 @@ export class SalesComponent implements OnInit {
   onOpenViewItems(items: ItemRowViewModel[]) {
     console.log(items);
     const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items } });
+  }
+
+  onRefresh() {
+    this.fetchSalesList();
   }
 
 }

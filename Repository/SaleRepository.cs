@@ -58,27 +58,35 @@ namespace ERP.Repository
                 var sql = "select * from SalesCart inner join Inventory on Inventory.InventoryId = SalesCart.ItemID " +
                     "inner join SalesOrder on SalesCart.SalesOrderID = SalesOrder.SalesOrderId " +
                     "inner join Consumer on Consumer.ConsumerId = SalesOrder.ConsumerID";
-                var SalessList = await connection.QueryAsync<SalesCartDbModel, InventoryDbModel, SalesOrderDbModel, ConsumerDbModel, SalesCartDbModel>(sql,
-                    (cart, items, order, consumer) =>
+                var SalesCartList = await connection.QueryAsync<SalesCartDbModel, InventoryDbModel, SalesOrderDbModel, ConsumerDbModel, SalesCartDbModel>(sql,
+                    (cart, item, order, consumer) =>
                     {
-                        items.RequestedQuantity = cart.Quantity;
-                        cart.Items.Add(items);
+                        item.RequestedQuantity = cart.Quantity;
+                        cart.Item = item;
                         cart.Order = order;
                         order.Consumer = consumer;
                         return cart;
                     }, splitOn: "InventoryId,SalesOrderID,ConsumerID"
                     );
                 List<SalesResponse> result = new List<SalesResponse>();
-                foreach (var i in SalessList)
+
+                var salesCartGroupedList = SalesCartList.GroupBy(u => u.Order.SalesOrderId)
+                                      .Select(grp => new { Id = grp.Key, Items = grp.ToList() })
+                                      .ToList();
+                foreach (var i in salesCartGroupedList)
                 {
+                    var cart = SalesCartList.FirstOrDefault(res => res.Order.SalesOrderId == i.Id);
+                    SaleCartResponse finalCart = new SaleCartResponse();
+                    finalCart.Id = i.Id;
+                    finalCart.Items = new List<ItemResponseModel>();
+                    i.Items.ForEach(item =>
+                    {
+                        finalCart.Items.Add(_mapper.Map<ItemResponseModel>(item.Item));
+                    });
+                    finalCart.SaleOrder = _mapper.Map<SaleOrderResponse>(cart.Order);
                     result.Add(new SalesResponse()
                     {
-                        Cart = new SaleCartResponse()
-                        {
-                            Items = _mapper.Map<List<ItemResponseModel>>(i.Items),
-                            SaleOrder = _mapper.Map<SaleOrderResponse>(i.Order),
-                            Id = i.SalesCartId
-                        }
+                        Cart = finalCart
                     });
                 }
                 return result;

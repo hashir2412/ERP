@@ -5,6 +5,7 @@ import { AddPurchaseModel } from "../add-purchase-dialog/add-purchase.viewModel"
 import { Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 import { DatePipe } from "@angular/common";
+import { BillType } from "../add-purchase-dialog/add-purchase.enum";
 @Injectable()
 export class CommonService {
     /**
@@ -22,21 +23,14 @@ export class CommonService {
         return message;
     }
 
-    printInvoice(invoiceNumber: number, data: AddPurchaseModel) {
-        const title = 'Car Sell Report';
-        const header = ["Year", "Month", "Make", "Model", "Quantity", "Pct"]
-        const data1 = [
-            [2007, 1, "Volkswagen ", "Volkswagen Passat", 1267, 10],
-            [2007, 1, "Toyota ", "Toyota Rav4", 819, 6.5],
-            [2007, 1, "Toyota ", "Toyota Avensis", 787, 6.2],
-            [2007, 1, "Volkswagen ", "Volkswagen Golf", 720, 5.7],
-            [2007, 1, "Toyota ", "Toyota Corolla", 691, 5.4],
-        ];
+    printInvoice(invoiceNumber: number, data: AddPurchaseModel, billType: BillType) {
         let workbook = new Workbook();
         let worksheet = workbook.addWorksheet('Invoice');
         worksheet.addRow([null, 'Tax Invoice']).font = { bold: true };
-        worksheet.addRow(['Supplier', 'Invoice No.', 'Date']).font = { bold: true };
-        worksheet.addRow(['Popular Enterprises \r\nKhan Building \r\nTandel Street (North) \r\nMumbai 400009 \r\nGSTIN/UIN: 27CFJPK8259K2ZP \r\nState: Maharashtra Code: 27', invoiceNumber, this.datePipe.transform(new Date(), 'dd/MM/yyyy')])
+        const supplierOrConsumer = billType === BillType.Purchase ? 'Supplier' : 'Consumer';
+        worksheet.addRow([`${supplierOrConsumer}`, 'Invoice No.', 'Date', null, null, 'Bank Details']).font = { bold: true };
+        worksheet.addRow(['Popular Enterprises \r\nKhan Building \r\nTandel Street (North) \r\nMumbai 400009 \r\nGSTIN/UIN: 27CFJPK8259K2ZP \r\nState: Maharashtra Code: 27', invoiceNumber, this.datePipe.transform(new Date(), 'dd/MM/yyyy'),
+            null, 'PAN No. CFJPK8259K', 'Bharat Co-Operative \r\n Bank (Mumbai) Ltd \r\n Ac No. 009312100002440\r\nIFSC Code BCBM0000094'])
             .alignment = { wrapText: true };
         worksheet.getColumn('A').width = 30;
         worksheet.getColumn('C').width = 12;
@@ -59,15 +53,13 @@ export class CommonService {
         worksheet.addRow(['Sub Total', null, null, null, null, null, data.subTotal]);
         worksheet.addRow(['Total', null, null, null, null, null, data.total]);
         worksheet.addRow(['Total', null, null, null, null, null, data.total]);
-        worksheet.addRow(['Bank Details', null, null, null, 'For Popular Enterprises']);
-        worksheet.addRow(['Bharat Co-Operative \r\n Bank (Mumbai) Ltd \r\n Ac No. 009312100002440\r\nIFSC Code BCBM0000094']).alignment = { wrapText: true };
-        worksheet.addRow(['PAN No. CFJPK8259K', null, null, null, 'Authorized Signatory']);
+        worksheet.addRow(['For Popular Enterprises']);
+        worksheet.addRow([]);
+        worksheet.addRow([]);
+        worksheet.addRow(['Authorized Signatory']);
         worksheet.eachRow(row => {
             row.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
         });
-
-
-
         // Set font, size and style in title row.
         // Blank Row
         worksheet.addRow([]);

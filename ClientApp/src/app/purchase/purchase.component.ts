@@ -109,14 +109,14 @@ export class PurchaseComponent implements OnInit {
   }
 
   onPrint() {
-    // const result: AddPurchaseModel = {
-    //   items: [{
-    //     description: 'd1', gst: 3, priceWithoutTax: 4, quantityName: MeasureQuantityName.Gram, quantityValue: 'test v',
-    //     name: 'rajma', total: 30, priceWithTax: 25, quantity: 3, rawName: 'ad', sellingPriceWithTax: 40, sellingPriceWithoutTax: 30, subTotal: 20
-    //   }],
-    //   supplier: { address: '1asd, ayolo,asd,aaaaasd', description: 'd2', gstin: 'asd', name: 'abc supplier', id: 2 }
-    // };
-    // this.commonService.printInvoice(2, result);
+    const result: AddPurchaseModel = {
+      items: [{
+        description: 'd1', gst: 3, priceWithoutTax: 4, quantityName: MeasureQuantityName.Gram, quantityValue: 'test v',
+        name: 'rajma', total: 30, priceWithTax: 25, quantity: 3, rawName: 'ad', sellingPriceWithTax: 40, sellingPriceWithoutTax: 30, subTotal: 20, sellingPriceSubTotal: 2, sellingPriceTotal: 10
+      }],
+      supplier: { address: '1asd, ayolo,asd,aaaaasd', description: 'd2', gstin: 'asd', name: 'abc supplier', id: 2 }
+    };
+    this.commonService.printInvoice(2, result, BillType.Purchase);
   }
 
   onOpenAddPurchaseDialog() {
@@ -130,7 +130,7 @@ export class PurchaseComponent implements OnInit {
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Purchase successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
-            this.commonService.printInvoice(res.data, result);
+            this.commonService.printInvoice(res.data, result, BillType.Purchase);
             this.fetchPurchaseList();
           }
           else {
@@ -149,5 +149,9 @@ export class PurchaseComponent implements OnInit {
 
   onOpenViewItems(items: ItemRowViewModel[]) {
     const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items } });
+  }
+
+  onRefresh() {
+    this.fetchPurchaseList();
   }
 }

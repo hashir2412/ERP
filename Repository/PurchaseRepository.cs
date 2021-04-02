@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERP.Repository
@@ -63,11 +64,11 @@ namespace ERP.Repository
                 var sql = "select * from PurchaseCart inner join Inventory on Inventory.InventoryId = PurchaseCart.ItemID " +
                     "inner join PurchaseOrder on PurchaseCart.PurchaseOrderID = PurchaseOrder.PurchaseOrderId " +
                     "inner join Supplier on Supplier.SupplierId = PurchaseOrder.SupplierID";
-                var purchasesList = await connection.QueryAsync<PurchaseCartDbModel, InventoryDbModel, PurchaseOrderDbModel, SupplierDbModel, PurchaseCartDbModel>(sql,
-                    (cart, items, order, supplier) =>
+                var purchaseCartList = await connection.QueryAsync<PurchaseCartDbModel, InventoryDbModel, PurchaseOrderDbModel, SupplierDbModel, PurchaseCartDbModel>(sql,
+                    (cart, item, order, supplier) =>
                     {
-                        items.RequestedQuantity = cart.Quantity;
-                        cart.Items.Add(items);
+                        item.RequestedQuantity = cart.Quantity;
+                        cart.Item = item;
                         cart.Order = order;
                         order.Supplier = supplier;
                         return cart;
@@ -75,16 +76,24 @@ namespace ERP.Repository
                     );
                 _logger.LogInformation("Purchase Repository - Get Purchases Successful");
                 List<PurchasesResponse> result = new List<PurchasesResponse>();
-                foreach (var i in purchasesList)
+
+                var purchaseCartGroupedList = purchaseCartList.GroupBy(u => u.Order.PurchaseOrderId)
+                                      .Select(grp => new { Id = grp.Key, Items = grp.ToList() })
+                                      .ToList();
+                foreach (var i in purchaseCartGroupedList)
                 {
+                    var cart = purchaseCartList.FirstOrDefault(res => res.Order.PurchaseOrderId == i.Id);
+                    PurchaseCartResponse finalCart = new PurchaseCartResponse();
+                    finalCart.Id = i.Id;
+                    finalCart.Items = new List<ItemResponseModel>();
+                    i.Items.ForEach(item =>
+                    {
+                        finalCart.Items.Add(_mapper.Map<ItemResponseModel>(item.Item));
+                    });
+                    finalCart.PurchaseOrder = _mapper.Map<PurchaseOrderResponse>(cart.Order);
                     result.Add(new PurchasesResponse()
                     {
-                        Cart = new PurchaseCartResponse()
-                        {
-                            Items = _mapper.Map<List<ItemResponseModel>>(i.Items),
-                            PurchaseOrder = _mapper.Map<PurchaseOrderResponse>(i.Order),
-                            Id = i.PurchaseCartId
-                        }
+                        Cart = finalCart
                     });
                 }
                 return result;

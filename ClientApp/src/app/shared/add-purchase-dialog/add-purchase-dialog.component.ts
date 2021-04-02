@@ -30,7 +30,7 @@ export class AddPurchaseDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPurchaseDialogComponent>,
     private inventoryService: InventoryService, private commonService: CommonService,
-    @Inject(MAT_DIALOG_DATA) public data: { suppliers: ConsumerSupplierRowModel[], selectTitle: BillType, sectionTitle: string }) {
+    @Inject(MAT_DIALOG_DATA) public data: { suppliers: ConsumerSupplierRowModel[], sectionTitle: BillType, selectTitle: string }) {
   }
 
   onCancelClick() {
@@ -86,7 +86,7 @@ export class AddPurchaseDialogComponent implements OnInit {
     this.subTotal = 0;
     this.gst = 0;
     this.addPurchaseModel.items.forEach(item => {
-      if (this.data.selectTitle === BillType.Purchase) {
+      if (this.data.sectionTitle === BillType.Purchase) {
         item.subTotal = item.priceWithoutTax * item.requestedQuantity;
         item.total = item.priceWithTax * item.requestedQuantity;
         this.subTotal = this.subTotal + (item.priceWithoutTax * item.requestedQuantity);

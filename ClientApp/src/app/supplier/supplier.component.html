@@ -1,4 +1,6 @@
-<button mat-flat-button color="primary" (click)="onOpenAddSupplierDialog()">Add New Supplier</button>
+<button mat-flat-button color="primary" (click)="onOpenAddSupplierDialog()"style="margin-right: 15px;">Add New
+    Supplier</button>
+<button mat-flat-button color="primary" (click)="onRefresh()">Refresh</button>
 <app-message [messages$]="messages$"></app-message>
 <app-loading [show$]="loading$"></app-loading>
 <div class="container">

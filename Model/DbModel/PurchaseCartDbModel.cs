@@ -12,7 +12,7 @@ namespace ERP.Model.DbModel
 
         public int Quantity { get; set; }
 
-        public List<InventoryDbModel> Items { get; set; } = new List<InventoryDbModel>();
+        public InventoryDbModel Item { get; set; }
 
         public PurchaseOrderDbModel Order { get; set; }
     }

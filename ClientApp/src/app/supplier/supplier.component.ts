@@ -93,4 +93,8 @@ export class SupplierComponent implements OnInit {
     });
   }
 
+  onRefresh() {
+    this.getSuppliers(true);
+  }
+
 }

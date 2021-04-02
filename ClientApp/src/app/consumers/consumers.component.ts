@@ -92,4 +92,8 @@ export class ConsumersComponent implements OnInit {
       }
     });
   }
+
+  onRefresh() {
+    this.getConsumers(true);
+  }
 }

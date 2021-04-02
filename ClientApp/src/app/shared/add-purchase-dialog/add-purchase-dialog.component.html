@@ -13,10 +13,10 @@
                 </mat-select>
             </mat-form-field>
             <ng-container *ngIf="addPurchaseModel.supplier">
-                <h5>GST No. {{addPurchaseModel.supplier.gstin}}</h5>
-                <h5>Address {{addPurchaseModel.supplier.address}}</h5>
+                <h3>GST No.</h3> {{addPurchaseModel.supplier.gstin}}
+                <h3>Address</h3> {{addPurchaseModel.supplier.address}}
                 <div>
-                    <h5> Cant find the suppier in the above dropdown? Add new supplier from Suppliers tab</h5>
+                    Cant find the suppier in the above dropdown? Add new supplier from Suppliers tab
                 </div>
                 <h3>Items</h3>
                 <div fxLayout="row" fxLayoutGap="10px"
@@ -35,47 +35,47 @@
                             (change)="calculateTotalAndSubTotal()" [(ngModel)]="item.requestedQuantity">
                     </mat-form-field>
                     <div fxLayout="column">
-                        <h4>Available Quantity</h4>
-                        <h5>{{item.quantity}}</h5>
+                        <h3>Available Quantity</h3>
+                        <h4>{{item.quantity}}</h4>
                     </div>
                     <div fxLayout="column">
-                        <h4>GST %</h4>
-                        <h5>{{item.gst}}</h5>
+                        <h3>GST %</h3>
+                        <h4>{{item.gst}}</h4>
                     </div>
                     <ng-container *ngIf="data.sectionTitle !== billType.Sale">
                         <div fxLayout="column">
-                            <h4>Price per item</h4>
-                            <h5>{{item.priceWithoutTax}}</h5>
+                            <h3>Cost Price per item</h3>
+                            <h4>{{item.priceWithoutTax}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Subtotal</h4>
-                            <h5>{{item.subTotal}}</h5>
+                            <h3>Item Subtotal</h3>
+                            <h4>{{item.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Tax</h4>
-                            <h5>{{item.total - item.subTotal}}</h5>
+                            <h3>Item Tax</h3>
+                            <h4>{{item.total - item.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Total</h4>
-                            <h5>{{item.total}}</h5>
+                            <h3>Item Total</h3>
+                            <h4>{{item.total}}</h4>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="data.sectionTitle === billType.Sale">
                         <div fxLayout="column">
-                            <h4>Price per item</h4>
-                            <h5>{{item.sellingPriceWithoutTax}}</h5>
+                            <h3>Selling Price per item</h3>
+                            <h4>{{item.sellingPriceWithoutTax}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Subtotal</h4>
-                            <h5>{{item.sellingPriceSubTotal}}</h5>
+                            <h3>Item Subtotal</h3>
+                            <h4>{{item.sellingPriceSubTotal}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Tax</h4>
-                            <h5>{{item.sellingPriceTotal - item.sellingPriceSubTotal}}</h5>
+                            <h3>Item Tax</h3>
+                            <h4>{{item.sellingPriceTotal - item.sellingPriceSubTotal}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h4>Item Total</h4>
-                            <h5>{{item.sellingPriceTotal}}</h5>
+                            <h3>Item Total</h3>
+                            <h4>{{item.sellingPriceTotal}}</h4>
                         </div>
                     </ng-container>
                     

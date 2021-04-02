@@ -18,12 +18,12 @@ export class SalesService {
         // return this.http.get<SupplierRowModel[]>(ApiUrl.requestApi);
     }
 
-    addSale(addPurchaseViewModel: AddPurchaseModel): Observable<ResponseModel<boolean[]>> {
+    addSale(addPurchaseViewModel: AddPurchaseModel): Observable<ResponseModel<number>> {
         const requestModel: AddSaleRequestModel = {
             consumerId: addPurchaseViewModel.supplier.id,
             items: addPurchaseViewModel.items
         };
-        return this.http.post<ResponseModel<boolean[]>>(ApiUrl.saleApi, requestModel);
+        return this.http.post<ResponseModel<number>>(ApiUrl.saleApi, requestModel);
     }
 
     getConsumers(): Observable<ResponseModel<ConsumerSupplierRowModel[]>> {
