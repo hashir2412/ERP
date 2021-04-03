@@ -14,7 +14,7 @@ namespace ERP
              .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
-          .WriteTo.File(@"f:\log\log.txt", rollingInterval: RollingInterval.Day)
+          .WriteTo.File(@"e:\log\log.txt", rollingInterval: RollingInterval.Day)
           .CreateLogger();
             try
             {

@@ -3,11 +3,10 @@ using Dapper;
 using ERP.Model;
 using ERP.Model.DbModel;
 using ERP.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ERP.Repository
@@ -16,16 +15,19 @@ namespace ERP.Repository
     {
         private readonly IMapper _mapper;
         private ILogger<ConsumerRepository> _logger;
+        private IConfiguration _configuration;
 
-        public ConsumerRepository(IMapper mapper, ILogger<ConsumerRepository> logger)
+
+        public ConsumerRepository(IMapper mapper, ILogger<ConsumerRepository> logger, IConfiguration configuration)
         {
             _mapper = mapper;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<ConsumerSupplierResponseModel>> GetConsumers()
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Consumers Repository - Get Consumers");
                 var sql = "select * from Consumer";
@@ -37,7 +39,7 @@ namespace ERP.Repository
 
         public async Task<int> AddConsumer(ConsumerSupplierResponseModel requestModel)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation($"Consumer Repository - Adding Consumer {requestModel.Name}<>{requestModel.GSTIN}<>{requestModel.Address}<>{requestModel.Description}");
                 var sql = $"INSERT INTO Consumer (Name,GSTIN,Address,Description) VALUES(@Name, @GSTIN, @Address, @Description)";
@@ -49,7 +51,7 @@ namespace ERP.Repository
 
         public async Task<int> UpdateConsumer(ConsumerSupplierResponseModel requestModel)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation($"Consumer Repository - Updating Consumer {requestModel.Name}<>{requestModel.GSTIN}<>{requestModel.Address}<>{requestModel.Description}");
                 var sql = $"Update Consumer set Name = {requestModel.Name}, GSTIN = {requestModel.GSTIN}, Address= {requestModel.Address},Description={requestModel.Description} Where Id = {requestModel.Id}";
@@ -61,7 +63,7 @@ namespace ERP.Repository
 
         public async Task<int> DeleteConsumer(int consumerId)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation($"Consumer Repository - Deleting Consumer {consumerId}");
                 var sql = $"Delete from Consumer where ConsumerId={consumerId}";

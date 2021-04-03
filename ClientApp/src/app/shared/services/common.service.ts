@@ -30,7 +30,7 @@ export class CommonService {
         worksheet.addRow([null, 'Tax Invoice']).font = { bold: true };
         worksheet.addRow(['Supplier', 'Invoice No.', 'Date', null, null, 'Bank Details']).font = { bold: true };
         worksheet.addRow(['Popular Enterprises \r\nKhan Building \r\nTandel Street (North) \r\nMumbai 400009 \r\nGSTIN/UIN: 27CFJPK8259K2ZP \r\nState: Maharashtra Code: 27', invoiceNumber, this.datePipe.transform(new Date(), 'dd/MM/yyyy'),
-            null, 'PAN No. CFJPK8259K', 'Bharat Co-Operative \r\n Bank (Mumbai) Ltd \r\n Ac No. 009312100002440\r\nIFSC Code BCBM0000094'])
+            null])
             .alignment = { wrapText: true };
         worksheet.getColumn('A').width = 30;
         worksheet.getColumn('A');
@@ -57,6 +57,8 @@ export class CommonService {
         worksheet.addRow(['Sub Total', null, null, null, null, null, data.subTotal]);
         worksheet.addRow(['Total', null, null, null, null, null, data.total]);
         worksheet.addRow([`INR ${totalInWords.toUpperCase()} only`, null, null, null, null, 'RoundUp', Math.round(data.total)]);
+        worksheet.addRow(['Bharat Co-Operative \r\n Bank (Mumbai) Ltd \r\n Ac No. 009312100002440\r\nIFSC Code BCBM0000094']).alignment = { wrapText: true };
+        worksheet.addRow(['PAN No. CFJPK8259K']);
         worksheet.addRow(['For Popular Enterprises']);
         worksheet.addRow([]);
         worksheet.addRow([]);

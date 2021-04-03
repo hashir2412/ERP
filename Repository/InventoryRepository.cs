@@ -4,13 +4,11 @@ using ERP.Domain;
 using ERP.Model;
 using ERP.Model.DbModel;
 using ERP.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace ERP.Repository
 {
@@ -18,15 +16,17 @@ namespace ERP.Repository
     {
         private readonly IMapper _mapper;
         private readonly ILogger<InventoryRepository> _logger;
+        private IConfiguration _configuration;
 
-        public InventoryRepository(IMapper mapper, ILogger<InventoryRepository> logger)
+        public InventoryRepository(IMapper mapper, ILogger<InventoryRepository> logger, IConfiguration configuration)
         {
             _mapper = mapper;
             _logger = logger;
+            _configuration = configuration;
         }
         public async Task<List<bool>> AddItems(List<ItemRequestModel> items)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 List<bool> results = new List<bool>();
                 foreach (var item in items)
@@ -58,7 +58,7 @@ namespace ERP.Repository
 
         public async Task<IEnumerable<ItemResponseModel>> GetItems()
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Inventory Repository - Get Items");
                 var sql = "select * from Inventory";
@@ -70,7 +70,7 @@ namespace ERP.Repository
 
         public async Task<List<bool>> UpdateItemsQuantity(List<ItemRequestModel> items, bool isSale)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Inventory Repository - Update Items");
                 List<bool> results = new List<bool>();

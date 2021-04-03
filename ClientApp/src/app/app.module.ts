@@ -34,6 +34,7 @@ import { MessageComponent } from './shared/message/message.component';
 import { ConsumersService } from './consumers/consumers.service';
 import { MessageModule, MessagesModule } from 'primeng-lts';
 import { DatePipe } from '@angular/common';
+import { httpInterceptorProviders } from './interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +71,8 @@ import { DatePipe } from '@angular/common';
     MessageModule
   ],
   entryComponents: [ConsumerFormComponent],
-  providers: [AppMemoryStoreService, SupplierService, InventoryService, ConsumersService, CommonService, DatePipe],
+  providers: [httpInterceptorProviders,
+    AppMemoryStoreService, SupplierService, InventoryService, ConsumersService, CommonService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

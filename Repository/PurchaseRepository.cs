@@ -3,6 +3,7 @@ using Dapper;
 using ERP.Model;
 using ERP.Model.DbModel;
 using ERP.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,17 @@ namespace ERP.Repository
     {
         private readonly IMapper _mapper;
         private readonly ILogger<PurchaseRepository> _logger;
+        private IConfiguration _configuration;
 
-        public PurchaseRepository(IMapper mapper, ILogger<PurchaseRepository> logger)
+        public PurchaseRepository(IMapper mapper, ILogger<PurchaseRepository> logger,IConfiguration configuration)
         {
             _mapper = mapper;
             _logger = logger;
+            _configuration = configuration;
         }
         public async Task<int> AddPurchase(AddPurchaseRequestModel requestModel, double total, double totalWithoutTax)
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Purchase Repository - Add Purchase");
                 var id = $"INSERT INTO PurchaseOrder (SupplierID,PurchaseDate,Total,TotalWithoutTax)" +
@@ -58,7 +61,9 @@ namespace ERP.Repository
 
         public async Task<IEnumerable<PurchasesResponse>> GetPurchases()
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            string someValue = _configuration.GetSection(TestDemo.CONNECTIONSTRING).Value;
+            _logger.LogInformation($"connection string value {_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value}");
+            using (var connection = new SqlConnection(someValue))
             {
                 _logger.LogInformation("Purchase Repository - Get purchases");
                 var sql = "select * from PurchaseCart inner join Inventory on Inventory.InventoryId = PurchaseCart.ItemID " +
@@ -74,7 +79,6 @@ namespace ERP.Repository
                         return cart;
                     }, splitOn: "InventoryId,PurchaseOrderID,SupplierID"
                     );
-                _logger.LogInformation("Purchase Repository - Get Purchases Successful");
                 List<PurchasesResponse> result = new List<PurchasesResponse>();
 
                 var purchaseCartGroupedList = purchaseCartList.GroupBy(u => u.Order.PurchaseOrderId)
@@ -96,6 +100,7 @@ namespace ERP.Repository
                         Cart = finalCart
                     });
                 }
+                _logger.LogInformation("Purchase Repository - Get Purchases Successful");
                 return result;
             }
 

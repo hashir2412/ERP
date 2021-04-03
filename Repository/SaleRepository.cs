@@ -3,6 +3,8 @@ using Dapper;
 using ERP.Model;
 using ERP.Model.DbModel;
 using ERP.Repository.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -14,17 +16,20 @@ namespace ERP.Repository
     public class SaleRepository : ISaleRepository
     {
         private readonly IMapper _mapper;
-
-        public SaleRepository(IMapper mapper)
+        private ILogger<SaleRepository> _logger;
+        private IConfiguration _configuration;
+        public SaleRepository(IMapper mapper, ILogger<SaleRepository> logger, IConfiguration configuration)
         {
             _mapper = mapper;
+            _logger = logger;
+            _configuration = configuration;
         }
         public async Task<int> AddSale(AddSaleRequestModel requestModel, double total, double totalWithoutTax)
         {
 
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
-
+                _logger.LogInformation("Sale Repository - Add Sale");
                 var id = $"INSERT INTO SalesOrder (ConsumerID,SaleDate,Total,TotalWithoutTax)" +
                 $" VALUES (@ConsumerID,@SaleDate,@Total,@TotalWithoutTax); SELECT CAST(SCOPE_IDENTITY() as int);";
                 var salesOrderResult = await connection.ExecuteScalarAsync<int>(id, new
@@ -34,6 +39,8 @@ namespace ERP.Repository
                     Total = total,
                     TotalWithoutTax = totalWithoutTax
                 });
+                _logger.LogInformation($"Sale Repository - Inserted into Sale Order, Supplier - {requestModel.ConsumerId}, Date {DateTime.Now}" +
+                    $"Total {total} TotalWithoutTax {totalWithoutTax}");
                 int result = 0;
                 foreach (var item in requestModel.Items)
                 {
@@ -46,15 +53,16 @@ namespace ERP.Repository
                     });
                     result = SalesCartResult;
                 }
+                _logger.LogInformation("Sale Repository - Inserted into Sale Cart");
                 return result;
             }
         }
 
         public async Task<IEnumerable<SalesResponse>> GetSales()
         {
-            using (var connection = new SqlConnection(TestDemo.CONNECTIONSTRING))
+            using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
-
+                _logger.LogInformation("Sale Repository - Get Sales");
                 var sql = "select * from SalesCart inner join Inventory on Inventory.InventoryId = SalesCart.ItemID " +
                     "inner join SalesOrder on SalesCart.SalesOrderID = SalesOrder.SalesOrderId " +
                     "inner join Consumer on Consumer.ConsumerId = SalesOrder.ConsumerID";
@@ -89,6 +97,7 @@ namespace ERP.Repository
                         Cart = finalCart
                     });
                 }
+                _logger.LogInformation("Sale Repository - Get Sales Successful");
                 return result;
             }
         }
