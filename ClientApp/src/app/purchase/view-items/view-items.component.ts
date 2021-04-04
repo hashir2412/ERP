@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItemRowViewModel } from 'src/app/inventory/inventory.viewModel';
+import { BillType } from 'src/app/shared/add-purchase-dialog/add-purchase.enum';
 
 @Component({
   selector: 'app-view-items',
@@ -10,13 +11,14 @@ import { ItemRowViewModel } from 'src/app/inventory/inventory.viewModel';
 })
 export class ViewItemsComponent implements OnInit {
 
+  billTypeRefrence = BillType;
   constructor(public dialogRef: MatDialogRef<ViewItemsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { items: ItemRowViewModel[] }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { items: ItemRowViewModel[], billType: BillType }) { }
 
   ngOnInit(): void {
   }
 
-  onCancel(){
+  onCancel() {
     this.dialogRef.close();
   }
 }

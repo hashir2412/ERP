@@ -35,8 +35,8 @@ namespace ERP.Repository
                     _logger.LogInformation($"{item.Name} {item.QuantityName} {item.QuantityValue}, previous Quantity- {item.Quantity}," +
                         $" requested quantity- {item.RequestedQuantity}");
                     var res = $"{item.QuantityName}{InventoryService.SPLITSENTENCE}{item.QuantityValue}{InventoryService.SPLITSENTENCE}{item.Name}";
-                    var sql = $"INSERT INTO Inventory (Name, Description, Quantity, PriceWithoutTax, GST, PriceWithTax,RawName,SellingPriceWithoutTax,SellingPriceWithTax)" +
-                        $" VALUES(@Name,@Description,@Quantity,@PriceWithoutTax,@GST,@PriceWithTax,@RawName,@SellingPriceWithoutTax,@SellingPriceWithTax); ";
+                    var sql = $"INSERT INTO Inventory (Name, Description, Quantity, PriceWithoutTax, GST, PriceWithTax,RawName)" +
+                        $" VALUES(@Name,@Description,@Quantity,@PriceWithoutTax,@GST,@PriceWithTax,@RawName; ";
                     var result = await connection.ExecuteAsync(sql, new
                     {
                         Name = item.Name,
@@ -45,9 +45,7 @@ namespace ERP.Repository
                         PriceWithoutTax = item.PriceWithoutTax,
                         GST = item.GST,
                         PriceWithTax = item.PriceWithTax,
-                        RawName = res,
-                        SellingPriceWithoutTax = item.SellingPriceWithoutTax,
-                        SellingPriceWithTax = item.SellingPriceWithTax
+                        RawName = res
                     });
                     results.Add(result == 1);
                 }

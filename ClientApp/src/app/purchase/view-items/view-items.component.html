@@ -1,11 +1,24 @@
 <h1 mat-dialog-title>Items</h1>
 <div mat-dialog-content>
     <div fxLayout="column">
-        <h4 *ngFor="let item of data.items;index as i">{{i+1}}. {{item.name}} {{item.quantityValue}}
-            {{item.quantityName}}
-            -
-            {{item.requestedQuantity}} piece<span *ngIf="item.requestedQuantity > 1">s
-            </span></h4>
+        <div fxLayout="row" fxLayoutGap="10px" *ngFor="let item of data.items;index as i">
+            <h4>{{i+1}}. {{item.name}} {{item.quantityValue}}
+                {{item.quantityName}}
+                -
+                {{item.requestedQuantity}} piece<span *ngIf="item.requestedQuantity > 1">s
+                </span>
+            </h4>
+            <ng-container *ngIf="data.billType === billTypeRefrence.Sale">
+                <h4> Selling Price Without Tax - {{item.sellingPriceWithoutTax}} </h4>
+                <h4> Selling Price With Tax - {{item.sellingPriceWithTax}} </h4>
+            </ng-container>
+            <ng-container *ngIf="data.billType === billTypeRefrence.Purchase">
+                <h4> Cost Price Without Tax - {{item.priceWithoutTax}} </h4>
+                <h4> Cost Price With Tax - {{item.priceWithTax}} </h4>
+            </ng-container>
+        </div>
+
+
     </div>
 </div>
 <div mat-dialog-actions>

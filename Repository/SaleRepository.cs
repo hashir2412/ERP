@@ -44,12 +44,15 @@ namespace ERP.Repository
                 int result = 0;
                 foreach (var item in requestModel.Items)
                 {
-                    var sql = $"INSERT INTO SalesCart (SalesOrderID,ItemID,Quantity) VALUES(@SalesOrderID, @ItemID,@Quantity); SELECT CAST(SCOPE_IDENTITY() as int);";
+                    var sql = $"INSERT INTO SalesCart (SalesOrderID,ItemID,Quantity,SellingPriceWithoutTax,SellingPriceWithTax) " +
+                        $"VALUES(@SalesOrderID, @ItemID,@Quantity,@SellingPriceWithoutTax,@SellingPriceWithTax); SELECT CAST(SCOPE_IDENTITY() as int);";
                     var SalesCartResult = await connection.ExecuteScalarAsync<int>(sql, new
                     {
                         SalesOrderID = salesOrderResult,
                         ItemID = item.Id,
-                        Quantity = item.RequestedQuantity
+                        Quantity = item.RequestedQuantity,
+                        SellingPriceWithoutTax = item.SellingPriceWithoutTax,
+                        SellingPriceWithTax = item.SellingPriceWithTax
                     });
                     result = SalesCartResult;
                 }
@@ -69,6 +72,8 @@ namespace ERP.Repository
                 var SalesCartList = await connection.QueryAsync<SalesCartDbModel, InventoryDbModel, SalesOrderDbModel, ConsumerDbModel, SalesCartDbModel>(sql,
                     (cart, item, order, consumer) =>
                     {
+                        item.SellingPriceWithoutTax = cart.SellingPriceWithoutTax;
+                        item.SellingPriceWithTax = cart.SellingPriceWithTax;
                         item.RequestedQuantity = cart.Quantity;
                         cart.Item = item;
                         cart.Order = order;

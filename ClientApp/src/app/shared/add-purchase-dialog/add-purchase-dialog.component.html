@@ -61,25 +61,30 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="data.sectionTitle === billType.Sale">
-                        <div fxLayout="column">
-                            <h3>Selling Price per item</h3>
-                            <h4>{{item.sellingPriceWithoutTax}}</h4>
-                        </div>
+                        <mat-form-field>
+                            <mat-label>Selling Price Per Item (Without Tax)</mat-label>
+                            <input (change)="calculateTotalAndSubTotal()" name="txt-Selling Price(Without Tax)-{{i}}" min="0"
+                                matInput required type="number" [(ngModel)]="item.sellingPriceWithoutTax">
+                        </mat-form-field>
                         <div fxLayout="column">
                             <h3>Item Subtotal</h3>
-                            <h4>{{item.sellingPriceSubTotal}}</h4>
+                            <h4>{{item.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
-                            <h3>Item Tax</h3>
-                            <h4>{{item.sellingPriceTotal - item.sellingPriceSubTotal}}</h4>
+                            <h3>Per Item Tax</h3>
+                            <h4>{{item.sellingPriceWithTax - item.sellingPriceWithoutTax}}</h4>
+                        </div>
+                        <div fxLayout="column">
+                            <h3>Total Item Tax</h3>
+                            <h4>{{(item.sellingPriceWithTax - item.sellingPriceWithoutTax) * item.requestedQuantity}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Total</h3>
-                            <h4>{{item.sellingPriceTotal}}</h4>
+                            <h4>{{item.total}}</h4>
                         </div>
                     </ng-container>
-                    
-                    
+
+
                     <button mat-stroked-button color="warn" [disabled]="addPurchaseModel.items.length === 1"
                         aria-label="Example icon button with a plus one icon" (click)="removeItem(i)">
                         Delete Item

@@ -21,7 +21,9 @@ export class SalesService {
     addSale(addPurchaseViewModel: AddPurchaseModel): Observable<ResponseModel<number>> {
         const requestModel: AddSaleRequestModel = {
             consumerId: addPurchaseViewModel.supplier.id,
-            items: addPurchaseViewModel.items
+            items: addPurchaseViewModel.items,
+            subTotal: addPurchaseViewModel.subTotal,
+            total: addPurchaseViewModel.total
         };
         return this.http.post<ResponseModel<number>>(ApiUrl.saleApi, requestModel);
     }

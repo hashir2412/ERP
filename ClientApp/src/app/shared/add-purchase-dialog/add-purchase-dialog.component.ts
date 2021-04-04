@@ -50,6 +50,7 @@ export class AddPurchaseDialogComponent implements OnInit {
 
   removeItem(index: number) {
     this.addPurchaseModel.items.splice(index);
+    this.calculateTotalAndSubTotal();
   }
 
   onSubmit(form: NgForm) {
@@ -93,10 +94,15 @@ export class AddPurchaseDialogComponent implements OnInit {
         this.total = this.total + (item.priceWithTax * item.requestedQuantity);
       }
       else {
-        item.sellingPriceSubTotal = item.sellingPriceWithoutTax * item.requestedQuantity;
-        item.sellingPriceTotal = item.sellingPriceWithTax * item.requestedQuantity;
-        this.subTotal = this.subTotal + (item.sellingPriceWithoutTax * item.requestedQuantity);
-        this.total = this.total + (item.sellingPriceWithTax * item.requestedQuantity);
+        item.subTotal = item.sellingPriceWithoutTax * item.requestedQuantity;
+        item.sellingPriceWithTax = item.sellingPriceWithoutTax + (item.gst / 100 * item.sellingPriceWithoutTax);
+        item.total = item.sellingPriceWithTax * item.requestedQuantity;
+        this.subTotal = this.subTotal + item.subTotal;
+        this.total = this.total + item.total;
+        // item.sellingPriceSubTotal = item.sellingPriceWithoutTax * item.requestedQuantity;
+        // item.sellingPriceWithTax = (item.sellingPriceWithoutTax + (item.gst / 100 * item.sellingPriceWithoutTax)) * item.requestedQuantity;
+        // this.subTotal = this.subTotal + item.sellingPriceSubTotal;
+        // this.total = this.total + item.sellingPriceWithTax;
       }
 
       this.gst = this.total - this.subTotal;

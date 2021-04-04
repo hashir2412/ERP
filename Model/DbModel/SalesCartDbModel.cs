@@ -15,5 +15,9 @@ namespace ERP.Model.DbModel
         public InventoryDbModel Item { get; set; }
 
         public SalesOrderDbModel Order { get; set; }
+
+        public double SellingPriceWithoutTax { get; set; }
+
+        public double SellingPriceWithTax { get; set; }
     }
 }

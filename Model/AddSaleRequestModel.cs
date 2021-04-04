@@ -10,5 +10,8 @@ namespace ERP.Model
         public int ConsumerId { get; set; }
 
         public List<ItemRequestModel> Items { get; set; }
+
+        public double SubTotal { get; set; }
+        public double Total { get; set; }
     }
 }

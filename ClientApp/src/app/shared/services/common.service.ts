@@ -50,8 +50,12 @@ export class CommonService {
             dataString.push(`pc`);
             dataString.push(`${billType === BillType.Purchase ? item.requestedQuantity * item.priceWithoutTax : item.requestedQuantity * item.sellingPriceWithoutTax}`);
             worksheet.addRow(dataString);
-            worksheet.addRow([`Output CGST ${item.gst / 2} %`, null, null, null, null, null, billType === BillType.Purchase ? (item.priceWithTax - item.priceWithoutTax) : item.sellingPriceWithTax - item.sellingPriceWithoutTax]);
-            worksheet.addRow([`Output SGST ${item.gst / 2} %`, null, null, null, null, null, billType === BillType.Purchase ? (item.priceWithTax - item.priceWithoutTax) : item.sellingPriceWithTax - item.sellingPriceWithoutTax]);
+            worksheet.addRow([`Output CGST ${item.gst / 2} %`, null, null, null, null, null, billType === BillType.Purchase ?
+                item.requestedQuantity * (item.priceWithTax - item.priceWithoutTax) / 2 :
+                item.requestedQuantity * (item.sellingPriceWithTax - item.sellingPriceWithoutTax) / 2]);
+            worksheet.addRow([`Output SGST ${item.gst / 2} %`, null, null, null, null, null, billType === BillType.Purchase ?
+                item.requestedQuantity * (item.priceWithTax - item.priceWithoutTax) / 2 :
+                item.requestedQuantity * (item.sellingPriceWithTax - item.sellingPriceWithoutTax) / 2]);
         });
         const totalInWords = numToWords(Math.round(data.total));
         worksheet.addRow(['Sub Total', null, null, null, null, null, data.subTotal]);

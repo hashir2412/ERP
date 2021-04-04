@@ -156,7 +156,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   onOpenViewItems(items: ItemRowViewModel[]) {
-    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items } });
+    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items , billType: BillType.Purchase} });
   }
 
   onRefresh() {

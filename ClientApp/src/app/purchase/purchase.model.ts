@@ -4,6 +4,8 @@ import { ConsumerSupplierRowModel } from "../shared/consumer-supplier-row.viewMo
 export class AddPurchaseRequestModel {
     supplierId: number;
     items: AddItemRequestModel[];
+    subTotal: number;
+    total: number;
 }
 
 export class PurchaseCartModel{

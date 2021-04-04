@@ -21,13 +21,8 @@ namespace ERP.Domain
         }
         public async Task<BaseResponse<int>> AddPurchase(AddPurchaseRequestModel requestModel)
         {
-            double totalWithoutTax = 0;
-            double totalWithTax = 0;
-            requestModel.Items.ForEach(item =>
-            {
-                totalWithoutTax += (item.PriceWithoutTax * item.RequestedQuantity);
-                totalWithTax += (item.PriceWithTax * item.RequestedQuantity);
-            });
+            double totalWithoutTax = requestModel.SubTotal;
+            double totalWithTax = requestModel.Total;
             _logger.LogInformation("Purchase Service - Adding Purchase");
             var res1 = await inventoryRepository.UpdateItemsQuantity(requestModel.Items, false);
             bool resultOfQuery = true;

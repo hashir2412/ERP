@@ -43,15 +43,6 @@
                 <mat-label>Cost Price(With Tax)</mat-label>
                 <input matInput disabled type="number" name="txt-Cost Price(With Tax)" [(ngModel)]="newItem.priceWithTax">
             </mat-form-field>
-            <mat-form-field>
-                <mat-label>Selling Price (Without Tax)</mat-label>
-                <input (change)="onCalculateTotalPrice()" name="txt-Selling Price(Without Tax)" min="0" matInput required type="number"
-                    [(ngModel)]="newItem.sellingPriceWithoutTax">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Selling Price(With Tax)</mat-label>
-                <input matInput disabled type="number" min="0" name="txt-Selling Price(With Tax)" [(ngModel)]="newItem.sellingPriceWithTax">
-            </mat-form-field>
         </div>
     </div>
     <div mat-dialog-actions>

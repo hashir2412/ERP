@@ -10,5 +10,8 @@ namespace ERP.Model
         public int SupplierId { get; set; }
 
         public List<ItemRequestModel> Items { get; set; }
+
+        public double SubTotal { get; set; }
+        public double Total { get; set; }
     }
 }
