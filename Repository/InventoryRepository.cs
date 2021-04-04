@@ -36,7 +36,7 @@ namespace ERP.Repository
                         $" requested quantity- {item.RequestedQuantity}");
                     var res = $"{item.QuantityName}{InventoryService.SPLITSENTENCE}{item.QuantityValue}{InventoryService.SPLITSENTENCE}{item.Name}";
                     var sql = $"INSERT INTO Inventory (Name, Description, Quantity, PriceWithoutTax, GST, PriceWithTax,RawName)" +
-                        $" VALUES(@Name,@Description,@Quantity,@PriceWithoutTax,@GST,@PriceWithTax,@RawName; ";
+                        $" VALUES(@Name,@Description,@Quantity,@PriceWithoutTax,@GST,@PriceWithTax,@RawName)";
                     var result = await connection.ExecuteAsync(sql, new
                     {
                         Name = item.Name,

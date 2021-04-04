@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridApi, GridOptions, GridReadyEvent, RowDataChangedEvent } from 'ag-grid-community';
-import { BehaviorSubject } from 'rxjs';
+import { Message } from 'primeng-lts';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { MessageSeverity } from '../shared/message/message.enum';
+import { CommonService } from '../shared/services/common.service';
 import { AddEditInventoryDialogComponent } from './add-edit-inventory-dialog/add-edit-inventory-dialog.component';
 import { InventoryService } from './inventory.service';
 import { ItemRowViewModel } from './inventory.viewModel';
@@ -17,8 +20,9 @@ export class InventoryComponent implements OnInit {
   rowData$: BehaviorSubject<ItemRowViewModel[]> = new BehaviorSubject<ItemRowViewModel[]>([]);
   gridApi: GridApi;
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  messages$: Subject<Message> = new Subject<Message>();
 
-  constructor(private inventoryService: InventoryService, private dialog: MatDialog) { }
+  constructor(private inventoryService: InventoryService, private dialog: MatDialog, private commonService: CommonService) { }
   gridOptions: GridOptions = {
     pagination: true,
     paginationAutoPageSize: true,
@@ -97,6 +101,8 @@ export class InventoryComponent implements OnInit {
           this.getItems(true);
         }, err => {
           this.loading$.next(false);
+          const message = this.commonService.getMessage(err.message, 'Error', MessageSeverity.Error);
+          this.messages$.next(message);
         });
       }
     });

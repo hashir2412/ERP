@@ -22,9 +22,9 @@
 
         public int RequestedQuantity { get; set; }
 
-        public double SellingPriceWithoutTax { get; set; }
+        public double? SellingPriceWithoutTax { get; set; } = 0;
 
-        public double SellingPriceWithTax { get; set; }
+        public double? SellingPriceWithTax { get; set; } = 0;
 
     }
 }
