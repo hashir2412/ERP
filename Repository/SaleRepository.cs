@@ -35,7 +35,7 @@ namespace ERP.Repository
                 var salesOrderResult = await connection.ExecuteScalarAsync<int>(id, new
                 {
                     ConsumerID = requestModel.ConsumerId,
-                    SaleDate = DateTime.Now,
+                    SaleDate = requestModel.SaleDateTime,
                     Total = total,
                     TotalWithoutTax = totalWithoutTax
                 });

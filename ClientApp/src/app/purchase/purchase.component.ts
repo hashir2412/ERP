@@ -44,46 +44,48 @@ export class PurchaseComponent implements OnInit {
         field: 'id'
       },
       {
-      headerName: 'Supplier Name',
-      field: 'supplierName'
-    }, {
-      headerName: 'Purchase Date',
-      field: 'purchaseDate',
-      valueFormatter: (params: ValueFormatterParams) => {
-        return this.datePipe.transform(params.value, 'MMM d, y, h:mm:ss a');
-      }
-    }, {
-      headerName: 'Total',
-      field: 'total'
-    },
-    {
-      headerName: 'Total Without Tax',
-      field: 'totalWithoutTax'
-    },
-    {
-      headerName: 'Items',
-      filter: false,
-      valueGetter: () => {
-        return 'View Items';
+        headerName: 'Supplier Name',
+        field: 'supplierName'
+      }, {
+        headerName: 'Purchase Date',
+        field: 'purchaseDate',
+        valueFormatter: (params: ValueFormatterParams) => {
+          return this.datePipe.transform(params.value, 'short');
+        }
+      }, {
+        headerName: 'Total',
+        field: 'total'
       },
-      cellStyle: { color: 'blue', cursor: 'pointer' },
-      onCellClicked: (event: CellClickedEvent) => {
-        this.onOpenViewItems(event.data.items);
-      }
-    },
-    {
-      filter: false,
-      valueGetter: () => {
-        return 'Print Invoice';
+      {
+        headerName: 'Total Without Tax',
+        field: 'totalWithoutTax'
       },
-      cellStyle: { color: 'blue', cursor: 'pointer' },
-      onCellClicked: (event: CellClickedEvent) => {
-        const data = event.data as PurchaseRowModel;
-        this.loading$.next(true);
-        this.commonService.printInvoice(data.id, { items: data.items, supplier: data.supplier, subTotal: data.totalWithoutTax, total: data.total }, BillType.Purchase);
-        this.loading$.next(false);
-      }
-    }]
+      {
+        headerName: 'Items',
+        filter: false,
+        valueGetter: () => {
+          return 'View Items';
+        },
+        cellStyle: { color: 'blue', cursor: 'pointer' },
+        onCellClicked: (event: CellClickedEvent) => {
+          this.onOpenViewItems(event.data.items);
+        }
+      },
+      {
+        filter: false,
+        valueGetter: () => {
+          return 'Print Invoice';
+        },
+        cellStyle: { color: 'blue', cursor: 'pointer' },
+        onCellClicked: (event: CellClickedEvent) => {
+          const data = event.data as PurchaseRowModel;
+          this.loading$.next(true);
+          this.commonService.printInvoice(data.id, {
+            items: data.items, supplier: data.supplier, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.purchaseDate
+          }, BillType.Purchase);
+          this.loading$.next(false);
+        }
+      }]
   };
   supplierList: ConsumerSupplierRowModel[];
   ngOnInit(): void {
@@ -156,7 +158,7 @@ export class PurchaseComponent implements OnInit {
   }
 
   onOpenViewItems(items: ItemRowViewModel[]) {
-    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items , billType: BillType.Purchase} });
+    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items, billType: BillType.Purchase } });
   }
 
   onRefresh() {

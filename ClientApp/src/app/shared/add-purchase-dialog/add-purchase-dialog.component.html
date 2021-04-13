@@ -13,6 +13,13 @@
                 </mat-select>
             </mat-form-field>
             <ng-container *ngIf="addPurchaseModel.supplier">
+                <mat-form-field style="width: 20%;">
+                    <mat-label>Invoice Date</mat-label>
+                    <input matInput [(ngModel)]="addPurchaseModel.invoiceDateTime" name="txt-date" required
+                        [matDatepicker]="picker2">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2 color="primary"></mat-datepicker>
+                </mat-form-field>
                 <h3>GST No.</h3> {{addPurchaseModel.supplier.gstin}}
                 <h3>Address</h3> {{addPurchaseModel.supplier.address}}
                 <div>
@@ -63,8 +70,8 @@
                     <ng-container *ngIf="data.sectionTitle === billType.Sale">
                         <mat-form-field>
                             <mat-label>Selling Price Per Item (Without Tax)</mat-label>
-                            <input (change)="calculateTotalAndSubTotal()" name="txt-Selling Price(Without Tax)-{{i}}" min="0"
-                                matInput required type="number" [(ngModel)]="item.sellingPriceWithoutTax">
+                            <input (change)="calculateTotalAndSubTotal()" name="txt-Selling Price(Without Tax)-{{i}}"
+                                min="0" matInput required type="number" [(ngModel)]="item.sellingPriceWithoutTax">
                         </mat-form-field>
                         <div fxLayout="column">
                             <h3>Item Subtotal</h3>
@@ -76,7 +83,8 @@
                         </div>
                         <div fxLayout="column">
                             <h3>Total Item Tax</h3>
-                            <h4>{{(item.sellingPriceWithTax - item.sellingPriceWithoutTax) * item.requestedQuantity}}</h4>
+                            <h4>{{(item.sellingPriceWithTax - item.sellingPriceWithoutTax) * item.requestedQuantity}}
+                            </h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Total</h3>

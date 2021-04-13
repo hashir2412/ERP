@@ -29,7 +29,7 @@ export class CommonService {
         let worksheet = workbook.addWorksheet('Invoice');
         worksheet.addRow([null, 'Tax Invoice']).font = { bold: true };
         worksheet.addRow(['Supplier', 'Invoice No.', 'Date', null, null, 'Bank Details']).font = { bold: true };
-        worksheet.addRow(['Popular Enterprises \r\nKhan Building \r\nTandel Street (North) \r\nMumbai 400009 \r\nGSTIN/UIN: 27CFJPK8259K2ZP \r\nState: Maharashtra Code: 27', invoiceNumber, this.datePipe.transform(new Date(), 'dd/MM/yyyy'),
+        worksheet.addRow(['Popular Enterprises \r\nKhan Building \r\nTandel Street (North) \r\nMumbai 400009 \r\nGSTIN/UIN: 27CFJPK8259K2ZP \r\nState: Maharashtra Code: 27', invoiceNumber, this.datePipe.transform(data.invoiceDateTime, 'dd/MM/yyyy'),
             null])
             .alignment = { wrapText: true };
         worksheet.getColumn('A').width = 30;

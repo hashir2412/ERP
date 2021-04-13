@@ -13,5 +13,7 @@ namespace ERP.Model
 
         public double SubTotal { get; set; }
         public double Total { get; set; }
+
+        public DateTime SaleDateTime { get; set; }
     }
 }

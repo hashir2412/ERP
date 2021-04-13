@@ -78,7 +78,7 @@ export class SalesComponent implements OnInit {
         onCellClicked: (event: CellClickedEvent) => {
           const data = event.data as SalesRowModel;
           this.loading$.next(true);
-          this.commonService.printInvoice(data.id, { items: data.items, supplier: data.customer, subTotal: data.totalWithoutTax, total: data.total }, BillType.Sale);
+          this.commonService.printInvoice(data.id, { items: data.items, supplier: data.customer, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.saleDate }, BillType.Sale);
           this.loading$.next(false);
         }
       }]
@@ -145,7 +145,7 @@ export class SalesComponent implements OnInit {
 
   onOpenViewItems(items: ItemRowViewModel[]) {
     console.log(items);
-    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items,billType : BillType.Sale} });
+    const dialogRef = this.dialog.open(ViewItemsComponent, { data: { items: items, billType: BillType.Sale } });
   }
 
   onRefresh() {

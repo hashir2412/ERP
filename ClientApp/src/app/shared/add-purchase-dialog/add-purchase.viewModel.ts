@@ -6,4 +6,5 @@ export class AddPurchaseModel {
     items: ItemRowViewModel[] = [new ItemRowViewModel()];
     subTotal?: number;
     total?: number;
+    invoiceDateTime: Date;
 }

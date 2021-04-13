@@ -6,6 +6,7 @@ export class AddSaleRequestModel {
     items: AddItemRequestModel[];
     subTotal: number;
     total: number;
+    saleDateTime: string;
 }
 
 export class SaleCartModel {

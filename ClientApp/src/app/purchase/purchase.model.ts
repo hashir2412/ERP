@@ -6,6 +6,7 @@ export class AddPurchaseRequestModel {
     items: AddItemRequestModel[];
     subTotal: number;
     total: number;
+    purchaseDateTime: string;
 }
 
 export class PurchaseCartModel{

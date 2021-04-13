@@ -23,7 +23,8 @@ export class SalesService {
             consumerId: addPurchaseViewModel.supplier.id,
             items: addPurchaseViewModel.items,
             subTotal: addPurchaseViewModel.subTotal,
-            total: addPurchaseViewModel.total
+            total: addPurchaseViewModel.total,
+            saleDateTime: addPurchaseViewModel.invoiceDateTime.toLocaleString()
         };
         return this.http.post<ResponseModel<number>>(ApiUrl.saleApi, requestModel);
     }
