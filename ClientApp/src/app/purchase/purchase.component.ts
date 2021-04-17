@@ -15,6 +15,7 @@ import { Message } from 'primeng-lts';
 import { MessageSeverity } from '../shared/message/message.enum';
 import { BillType } from '../shared/add-purchase-dialog/add-purchase.enum';
 import { AddPurchaseModel } from '../shared/add-purchase-dialog/add-purchase.viewModel';
+import { InventoryService } from '../inventory/inventory.service';
 
 @Component({
   selector: 'app-purchase',
@@ -28,7 +29,7 @@ export class PurchaseComponent implements OnInit {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   messages$: Subject<Message> = new Subject<Message>();
   constructor(private purchaseService: PurchaseService, private dialog: MatDialog, private supplierService: SupplierService,
-    private datePipe: DatePipe, private commonService: CommonService) { }
+    private datePipe: DatePipe, private commonService: CommonService, private inventoryService: InventoryService) { }
   private colDef: ColDef = {
     sortable: true,
     floatingFilter: true,
@@ -141,6 +142,7 @@ export class PurchaseComponent implements OnInit {
             const message = this.commonService.getMessage('Purchase successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
             this.commonService.printInvoice(res.data, result, BillType.Purchase);
+            this.inventoryService.getItems(true);
             this.fetchPurchaseList();
           }
           else {

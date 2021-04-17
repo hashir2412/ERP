@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CellClickedEvent, ColDef, GridOptions, ValueFormatterParams } from 'ag-grid-community';
 import { Message } from 'primeng-lts/api';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { InventoryService } from '../inventory/inventory.service';
 import { ItemRowViewModel } from '../inventory/inventory.viewModel';
 import { ViewItemsComponent } from '../purchase/view-items/view-items.component';
 import { AddPurchaseDialogComponent } from '../shared/add-purchase-dialog/add-purchase-dialog.component';
@@ -26,7 +27,7 @@ export class SalesComponent implements OnInit {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   messages$: Subject<Message> = new Subject<Message>();
   constructor(private salesService: SalesService, private dialog: MatDialog,
-    private datePipe: DatePipe, private commonService: CommonService) { }
+    private datePipe: DatePipe, private commonService: CommonService, private inventoryService: InventoryService) { }
   private colDef: ColDef = {
     sortable: true,
     floatingFilter: true,
@@ -128,6 +129,7 @@ export class SalesComponent implements OnInit {
             const message = this.commonService.getMessage('Sale successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
             this.commonService.printInvoice(res.data, result, BillType.Sale);
+            this.inventoryService.getItems(true);
             this.fetchSalesList();
           }
           else {

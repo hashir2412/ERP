@@ -29,7 +29,7 @@ export class InventoryComponent implements OnInit {
     columnDefs: [{
       headerName: 'Name',
       field: 'name',
-      sortable: true, filter: true
+      sortable: true, filter: true, resizable: true
     }, {
       headerName: 'Description',
       field: 'description',

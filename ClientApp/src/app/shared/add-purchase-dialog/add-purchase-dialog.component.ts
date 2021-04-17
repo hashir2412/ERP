@@ -39,7 +39,11 @@ export class AddPurchaseDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.inventoryService.getItems(true).subscribe(res => {
-      this.items = res;
+      this.items = res.sort((a, b) => {
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+      });
     });
   }
 
