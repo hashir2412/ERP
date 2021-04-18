@@ -28,14 +28,10 @@
                 <h3>Items</h3>
                 <div fxLayout="row" fxLayoutGap="10px"
                     *ngFor="let item of addPurchaseModel.items;index as i;last as isLast">
-                    <mat-form-field>
-                        <mat-label>Items</mat-label>
-                        <mat-select required [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}">
-                            <mat-option *ngFor="let itemName of items" [value]="itemName">
-                                {{itemName.name}} {{itemName.quantityName}} {{itemName.quantityValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <p-dropdown [options]="items" [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}"
+                        optionLabel="displayName" filter="true">
+                    </p-dropdown>
+
                     <mat-form-field>
                         <mat-label>Quantity</mat-label>
                         <input matInput required type="number" name="quantity-{{i}}"

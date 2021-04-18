@@ -35,6 +35,9 @@ export class InventoryService {
     private getItemsList(): Observable<ItemRowViewModel[]> {
         return new Observable(o => {
             this.http.get<ItemRowViewModel[]>(ApiUrl.inventoryApi).subscribe(res => {
+                res.forEach(item => {
+                    item.displayName = `${item.name} ${item.quantityValue} ${item.quantityName}`;
+                });
                 this.store.add(DataStoreKeys.InventoryKey, res);
                 o.next(res);
                 o.complete();

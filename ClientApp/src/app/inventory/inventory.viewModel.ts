@@ -17,6 +17,7 @@ export class ItemRowViewModel {
     total: number;
     sellingPriceSubTotal: number;
     sellingPriceTotal: number;
+    displayName?: string;
 }
 
 
