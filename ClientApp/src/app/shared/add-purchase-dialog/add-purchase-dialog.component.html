@@ -6,8 +6,9 @@
             <mat-form-field>
                 <mat-label>{{data.selectTitle}}</mat-label>
                 <mat-select required [(ngModel)]="addPurchaseModel.supplier" name="food">
+                    <input (keyup)="onKeyForSupplier($event.target.value)" />
                     <mat-option>None</mat-option>
-                    <mat-option *ngFor="let supplier of data.suppliers" [value]="supplier">
+                    <mat-option *ngFor="let supplier of filteredSuppliers" [value]="supplier">
                         {{supplier.name}}
                     </mat-option>
                 </mat-select>
@@ -31,7 +32,8 @@
                     <mat-form-field>
                         <mat-label>Items</mat-label>
                         <mat-select required [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}">
-                            <mat-option *ngFor="let itemName of items" [value]="itemName">
+                            <input (keyup)="onKeyForItem($event.target.value)" />
+                            <mat-option *ngFor="let itemName of filteredItems" [value]="itemName">
                                 {{itemName.name}} {{itemName.quantityName}} {{itemName.quantityValue}}
                             </mat-option>
                         </mat-select>

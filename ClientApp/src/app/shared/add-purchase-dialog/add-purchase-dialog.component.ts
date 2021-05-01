@@ -11,6 +11,7 @@ import { MessageSeverity } from '../message/message.enum';
 import { CommonService } from '../services/common.service';
 import { BillType } from './add-purchase.enum';
 import { AddPurchaseModel } from './add-purchase.viewModel';
+import * as deepClone from 'lodash';
 
 @Component({
   selector: 'app-add-purchase-dialog',
@@ -20,7 +21,9 @@ import { AddPurchaseModel } from './add-purchase.viewModel';
 })
 export class AddPurchaseDialogComponent implements OnInit {
   addPurchaseModel: AddPurchaseModel = new AddPurchaseModel();
-  items: ItemRowViewModel[];
+  private items: ItemRowViewModel[];
+  filteredItems: ItemRowViewModel[];
+  filteredSuppliers: ConsumerSupplierRowModel[];
   subTotal = 0;
   total = 0;
   gst = 0;
@@ -44,6 +47,8 @@ export class AddPurchaseDialogComponent implements OnInit {
         if (a.name > b.name) { return 1; }
         return 0;
       });
+      this.filteredItems = deepClone.cloneDeep(this.items);
+      this.filteredSuppliers = deepClone.cloneDeep(this.data.suppliers);
     });
   }
 
@@ -111,6 +116,13 @@ export class AddPurchaseDialogComponent implements OnInit {
 
       this.gst = this.total - this.subTotal;
     });
+  }
+  onKeyForItem(value: string) {
+    this.filteredItems = this.items.filter(res => res.name.toLowerCase().includes(value.toLowerCase()));
+  }
+
+  onKeyForSupplier(value: string) {
+    this.filteredSuppliers = this.data.suppliers.filter(res => res.name.toLowerCase().includes(value.toLowerCase()));
   }
 
 }
