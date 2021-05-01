@@ -35,10 +35,8 @@ import { ConsumersService } from './consumers/consumers.service';
 import { MessageModule, MessagesModule } from 'primeng-lts';
 import { DatePipe } from '@angular/common';
 import { httpInterceptorProviders } from './interceptor';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DropdownModule } from 'primeng/dropdown';
-
 
 @NgModule({
   declarations: [
@@ -75,8 +73,7 @@ import { DropdownModule } from 'primeng/dropdown';
     MessagesModule,
     MessageModule,
     MatDatepickerModule,
-    MatNativeDateModule,
-    DropdownModule
+    MatNativeDateModule
   ],
   entryComponents: [ConsumerFormComponent],
   providers: [httpInterceptorProviders,
