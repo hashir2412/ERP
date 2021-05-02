@@ -12,13 +12,9 @@ export class InventoryService {
     constructor(private http: HttpClient, private store: AppMemoryStoreService) {
     }
     getItems(shouldRefresh: boolean): Observable<ItemRowViewModel[]> {
-        if (shouldRefresh) {
-            return this.getItemsList();
-        }
-        else {
-            let data: ItemRowViewModel[] = deepClone.cloneDeep(this.store.get<ItemRowViewModel[]>(DataStoreKeys.InventoryKey));
-            return data ? of(data) : this.getItemsList();
-        }
+
+        return this.getItemsList();
+
     }
 
     addItem(item: ItemRowViewModel): Observable<boolean[]> {
