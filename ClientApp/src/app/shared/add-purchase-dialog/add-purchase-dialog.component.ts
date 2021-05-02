@@ -63,6 +63,9 @@ export class AddPurchaseDialogComponent implements OnInit {
     if (form.valid) {
       this.addPurchaseModel.subTotal = this.subTotal;
       this.addPurchaseModel.total = this.total;
+      this.addPurchaseModel.items = this.addPurchaseModel.items.filter(
+        (thing, i, arr) => arr.findIndex(t => t.id === thing.id) === i
+      );
       if (this.data.sectionTitle === BillType.Sale) {
         if (this.validationForSalePassed()) {
           this.dialogRef.close(this.addPurchaseModel);
