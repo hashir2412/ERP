@@ -3,16 +3,9 @@
     <form #myForm="ngForm">
         <div fxLayout="column">
             <app-message [messages$]="messages$"></app-message>
-            <mat-form-field>
-                <mat-label>{{data.selectTitle}}</mat-label>
-                <mat-select required [(ngModel)]="addPurchaseModel.supplier" name="food">
-                    <input (keyup)="onKeyForSupplier($event.target.value)" />
-                    <mat-option>None</mat-option>
-                    <mat-option *ngFor="let supplier of filteredSuppliers" [value]="supplier">
-                        {{supplier.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <p-dropdown appendTo="body" [filter]="true" [options]="data.suppliers"
+                [(ngModel)]="addPurchaseModel.supplier" name="food" placeholder="{{data.selectTitle}}"
+                optionLabel="name" [showClear]="true"></p-dropdown>
             <ng-container *ngIf="addPurchaseModel.supplier">
                 <mat-form-field style="width: 20%;">
                     <mat-label>Invoice Date</mat-label>
@@ -28,69 +21,78 @@
                 </div>
                 <h3>Items</h3>
                 <div fxLayout="row" fxLayoutGap="10px"
-                    *ngFor="let item of addPurchaseModel.items;index as i;last as isLast">
-                    <mat-form-field>
-                        <mat-label>Items</mat-label>
-                        <mat-select required [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}">
-                            <input (keyup)="onKeyForItem($event.target.value)" />
-                            <mat-option *ngFor="let itemName of filteredItems" [value]="itemName">
-                                {{itemName.name}} {{itemName.quantityName}} {{itemName.quantityValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    *ngFor="let addItem of addPurchaseModel.items;index as i;last as isLast">
+                    <p-dropdown appendTo="body" [filter]="true" [options]="items"
+                        [(ngModel)]="addPurchaseModel.items[i]" name="txt-{{i}}" placeholder="Items" optionLabel="name">
+                        <ng-template pTemplate="selectedItem">
+                            <div class="country-item country-item-value" *ngIf="addPurchaseModel.items[i]">
+                                <div> {{addPurchaseModel.items[i].name}} {{addPurchaseModel.items[i].quantityValue}}
+                                    {{addPurchaseModel.items[i].quantityName}}
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-country pTemplate="item">
+                            <div class="country-item">
+                                <div> {{country?.value.name}} {{country?.value.quantityValue}}
+                                    {{country?.value.quantityName}}
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
                     <mat-form-field>
                         <mat-label>Quantity</mat-label>
                         <input matInput required type="number" name="quantity-{{i}}"
-                            (change)="calculateTotalAndSubTotal()" [(ngModel)]="item.requestedQuantity">
+                            (change)="calculateTotalAndSubTotal()" [(ngModel)]="addItem.requestedQuantity">
                     </mat-form-field>
                     <div fxLayout="column">
                         <h3>Available Quantity</h3>
-                        <h4>{{item.quantity}}</h4>
+                        <h4>{{addItem.quantity}}</h4>
                     </div>
                     <div fxLayout="column">
                         <h3>GST %</h3>
-                        <h4>{{item.gst}}</h4>
+                        <h4>{{addItem.gst}}</h4>
                     </div>
                     <ng-container *ngIf="data.sectionTitle !== billType.Sale">
                         <div fxLayout="column">
                             <h3>Cost Price per item</h3>
-                            <h4>{{item.priceWithoutTax}}</h4>
+                            <h4>{{addItem.priceWithoutTax}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Subtotal</h3>
-                            <h4>{{item.subTotal}}</h4>
+                            <h4>{{addItem.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Tax</h3>
-                            <h4>{{item.total - item.subTotal}}</h4>
+                            <h4>{{addItem.total - addItem.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Total</h3>
-                            <h4>{{item.total}}</h4>
+                            <h4>{{addItem.total}}</h4>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="data.sectionTitle === billType.Sale">
                         <mat-form-field>
                             <mat-label>Selling Price Per Item (Without Tax)</mat-label>
                             <input (change)="calculateTotalAndSubTotal()" name="txt-Selling Price(Without Tax)-{{i}}"
-                                min="0" matInput required type="number" [(ngModel)]="item.sellingPriceWithoutTax">
+                                min="0" matInput required type="number" [(ngModel)]="addItem.sellingPriceWithoutTax">
                         </mat-form-field>
                         <div fxLayout="column">
                             <h3>Item Subtotal</h3>
-                            <h4>{{item.subTotal}}</h4>
+                            <h4>{{addItem.subTotal}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Per Item Tax</h3>
-                            <h4>{{item.sellingPriceWithTax - item.sellingPriceWithoutTax}}</h4>
+                            <h4>{{addItem.sellingPriceWithTax - addItem.sellingPriceWithoutTax}}</h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Total Item Tax</h3>
-                            <h4>{{(item.sellingPriceWithTax - item.sellingPriceWithoutTax) * item.requestedQuantity}}
+                            <h4>{{(addItem.sellingPriceWithTax - addItem.sellingPriceWithoutTax) *
+                                addItem.requestedQuantity}}
                             </h4>
                         </div>
                         <div fxLayout="column">
                             <h3>Item Total</h3>
-                            <h4>{{item.total}}</h4>
+                            <h4>{{addItem.total}}</h4>
                         </div>
                     </ng-container>
 

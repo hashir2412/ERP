@@ -21,9 +21,7 @@ import * as deepClone from 'lodash';
 })
 export class AddPurchaseDialogComponent implements OnInit {
   addPurchaseModel: AddPurchaseModel = new AddPurchaseModel();
-  private items: ItemRowViewModel[];
-  filteredItems: ItemRowViewModel[];
-  filteredSuppliers: ConsumerSupplierRowModel[];
+  items: ItemRowViewModel[];
   subTotal = 0;
   total = 0;
   gst = 0;
@@ -47,8 +45,6 @@ export class AddPurchaseDialogComponent implements OnInit {
         if (a.name > b.name) { return 1; }
         return 0;
       });
-      this.filteredItems = deepClone.cloneDeep(this.items);
-      this.filteredSuppliers = deepClone.cloneDeep(this.data.suppliers);
     });
   }
 
@@ -117,12 +113,4 @@ export class AddPurchaseDialogComponent implements OnInit {
       this.gst = this.total - this.subTotal;
     });
   }
-  onKeyForItem(value: string) {
-    this.filteredItems = this.items.filter(res => res.name.toLowerCase().includes(value.toLowerCase()));
-  }
-
-  onKeyForSupplier(value: string) {
-    this.filteredSuppliers = this.data.suppliers.filter(res => res.name.toLowerCase().includes(value.toLowerCase()));
-  }
-
 }
