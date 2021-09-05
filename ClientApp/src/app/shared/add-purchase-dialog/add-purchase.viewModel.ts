@@ -7,4 +7,5 @@ export class AddPurchaseModel {
     subTotal?: number;
     total?: number;
     invoiceDateTime: Date;
+    orderId: string;
 }

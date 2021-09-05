@@ -30,10 +30,11 @@ namespace ERP.Repository
             using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Sale Repository - Add Sale");
-                var id = $"INSERT INTO SalesOrder (ConsumerID,SaleDate,Total,TotalWithoutTax)" +
-                $" VALUES (@ConsumerID,@SaleDate,@Total,@TotalWithoutTax); SELECT CAST(SCOPE_IDENTITY() as int);";
-                var salesOrderResult = await connection.ExecuteScalarAsync<int>(id, new
+                var id = $"INSERT INTO SalesOrder (SalesOrderId,ConsumerID,SaleDate,Total,TotalWithoutTax)" +
+                $" VALUES (@SalesOrderId,@ConsumerID,@SaleDate,@Total,@TotalWithoutTax);";
+                await connection.ExecuteScalarAsync<int>(id, new
                 {
+                    SalesOrderId = requestModel.OrderId,
                     ConsumerID = requestModel.ConsumerId,
                     SaleDate = requestModel.SaleDateTime,
                     Total = total,
@@ -48,7 +49,7 @@ namespace ERP.Repository
                         $"VALUES(@SalesOrderID, @ItemID,@Quantity,@SellingPriceWithoutTax,@SellingPriceWithTax); SELECT CAST(SCOPE_IDENTITY() as int);";
                     var SalesCartResult = await connection.ExecuteScalarAsync<int>(sql, new
                     {
-                        SalesOrderID = salesOrderResult,
+                        SalesOrderID = requestModel.OrderId,
                         ItemID = item.Id,
                         Quantity = item.RequestedQuantity,
                         SellingPriceWithoutTax = item.SellingPriceWithoutTax,

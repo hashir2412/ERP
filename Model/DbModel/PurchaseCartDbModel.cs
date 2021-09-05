@@ -6,7 +6,7 @@ namespace ERP.Model.DbModel
     {
         public int PurchaseCartId { get; set; }
 
-        public int PurhcaseOrderID { get; set; }
+        public string PurhcaseOrderID { get; set; }
 
         public int ItemID { get; set; }
 

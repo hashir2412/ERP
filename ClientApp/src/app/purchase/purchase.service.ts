@@ -26,7 +26,8 @@ export class PurchaseService {
             items: addPurchaseViewModel.items,
             subTotal : addPurchaseViewModel.subTotal,
             total: addPurchaseViewModel.total,
-            purchaseDateTime: addPurchaseViewModel.invoiceDateTime.toLocaleString()
+            purchaseDateTime: addPurchaseViewModel.invoiceDateTime.toLocaleString(),
+            orderId: addPurchaseViewModel.orderId
         };
         return this.http.post<ResponseModel<number>>(ApiUrl.purchaseApi, requestModel);
     }

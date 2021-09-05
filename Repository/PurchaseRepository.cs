@@ -30,14 +30,15 @@ namespace ERP.Repository
             using (var connection = new SqlConnection(_configuration.GetSection(TestDemo.CONNECTIONSTRING).Value))
             {
                 _logger.LogInformation("Purchase Repository - Add Purchase");
-                var id = $"INSERT INTO PurchaseOrder (SupplierID,PurchaseDate,Total,TotalWithoutTax)" +
-                $" VALUES (@SupplierID,@PurchaseDate,@Total,@TotalWithoutTax); SELECT CAST(SCOPE_IDENTITY() as int);";
-                var purchaseOrderResultId = await connection.ExecuteScalarAsync<int>(id, new
+                var id = $"INSERT INTO PurchaseOrder (PurchaseOrderId,SupplierID,PurchaseDate,Total,TotalWithoutTax)" +
+                $" VALUES (@PurchaseOrderId,@SupplierID,@PurchaseDate,@Total,@TotalWithoutTax);";
+                await connection.ExecuteScalarAsync<int>(id, new
                 {
                     SupplierID = requestModel.SupplierId,
                     PurchaseDate = requestModel.PurchaseDateTime,
                     Total = total,
-                    TotalWithoutTax = totalWithoutTax
+                    TotalWithoutTax = totalWithoutTax,
+                    PurchaseOrderId = requestModel.OrderId
                 });
                 _logger.LogInformation($"Purchase Repository - Inserted into Purchase Order, Supplier - {requestModel.SupplierId}, Date {DateTime.Now}" +
                     $"Total {total} TotalWithoutTax {totalWithoutTax}");
@@ -47,7 +48,7 @@ namespace ERP.Repository
                     var sql = $"INSERT INTO PurchaseCart (PurchaseOrderID,ItemID,Quantity) VALUES(@PurchaseOrderID, @ItemID,@Quantity); SELECT CAST(SCOPE_IDENTITY() as int);";
                     var purchaseCartResult = await connection.ExecuteScalarAsync<int>(sql, new
                     {
-                        PurchaseOrderID = purchaseOrderResultId,
+                        PurchaseOrderID = requestModel.OrderId,
                         ItemID = item.Id,
                         Quantity = item.RequestedQuantity
                     });

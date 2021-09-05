@@ -7,6 +7,7 @@ export class AddSaleRequestModel {
     subTotal: number;
     total: number;
     saleDateTime: string;
+    orderId: string;
 }
 
 export class SaleCartModel {

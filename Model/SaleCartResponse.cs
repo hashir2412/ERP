@@ -7,7 +7,7 @@ namespace ERP.Model
 {
     public class SaleCartResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public SaleOrderResponse SaleOrder { get; set; }
 
         public List<ItemResponseModel> Items { get; set; }

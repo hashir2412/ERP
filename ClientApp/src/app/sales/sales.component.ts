@@ -9,6 +9,7 @@ import { ItemRowViewModel } from '../inventory/inventory.viewModel';
 import { ViewItemsComponent } from '../purchase/view-items/view-items.component';
 import { AddPurchaseDialogComponent } from '../shared/add-purchase-dialog/add-purchase-dialog.component';
 import { BillType } from '../shared/add-purchase-dialog/add-purchase.enum';
+import { AddPurchaseModel } from '../shared/add-purchase-dialog/add-purchase.viewModel';
 import { ConsumerSupplierRowModel } from '../shared/consumer-supplier-row.viewModel';
 import { MessageSeverity } from '../shared/message/message.enum';
 import { CommonService } from '../shared/services/common.service';
@@ -79,7 +80,10 @@ export class SalesComponent implements OnInit {
         onCellClicked: (event: CellClickedEvent) => {
           const data = event.data as SalesRowModel;
           this.loading$.next(true);
-          this.commonService.printInvoice(data.id, { items: data.items, supplier: data.customer, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.saleDate }, BillType.Sale);
+          this.commonService.printInvoice(data.id.toString(), {
+            items: data.items, supplier: data.customer, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.saleDate
+            , orderId: '-1'
+          }, BillType.Sale);
           this.loading$.next(false);
         }
       }]
@@ -118,9 +122,14 @@ export class SalesComponent implements OnInit {
   }
 
   onOpenAddSaleDialog() {
-    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.consumerList, selectTitle: 'Consumers', sectionTitle: BillType.Sale } });
+    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, {
+      data: {
+        suppliers: this.consumerList, selectTitle: 'Consumers', sectionTitle: BillType.Sale,
+        orderIds: this.rowData$.value.map(res => res.id)
+      }
+    });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: AddPurchaseModel) => {
       if (result) {
         this.loading$.next(true);
 
@@ -128,7 +137,7 @@ export class SalesComponent implements OnInit {
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Sale successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
-            this.commonService.printInvoice(res.data, result, BillType.Sale);
+            this.commonService.printInvoice(result.orderId, result, BillType.Sale);
             this.inventoryService.getItems(true);
             this.fetchSalesList();
           }

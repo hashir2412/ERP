@@ -24,7 +24,7 @@ export class CommonService {
         return message;
     }
 
-    printInvoice(invoiceNumber: number, data: AddPurchaseModel, billType: BillType) {
+    printInvoice(invoiceNumber: string, data: AddPurchaseModel, billType: BillType) {
         let workbook = new Workbook();
         let worksheet = workbook.addWorksheet('Invoice');
         worksheet.addRow([null, 'Tax Invoice']).font = { bold: true };

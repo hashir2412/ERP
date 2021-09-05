@@ -4,7 +4,7 @@ namespace ERP.Model.DbModel
 {
     public class SalesOrderDbModel
     {
-        public int SalesOrderId { get; set; }
+        public string SalesOrderId { get; set; }
 
         public int ConsumerID { get; set; }
 

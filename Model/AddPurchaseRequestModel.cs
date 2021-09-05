@@ -7,6 +7,7 @@ namespace ERP.Model
 {
     public class AddPurchaseRequestModel
     {
+        public string OrderId { get; set; }
         public int SupplierId { get; set; }
 
         public List<ItemRequestModel> Items { get; set; }

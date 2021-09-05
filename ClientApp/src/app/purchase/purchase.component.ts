@@ -82,7 +82,8 @@ export class PurchaseComponent implements OnInit {
           const data = event.data as PurchaseRowModel;
           this.loading$.next(true);
           this.commonService.printInvoice(data.id, {
-            items: data.items, supplier: data.supplier, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.purchaseDate
+            items: data.items, supplier: data.supplier, subTotal: data.totalWithoutTax, total: data.total, invoiceDateTime: data.purchaseDate,
+            orderId: '-1'
           }, BillType.Purchase);
           this.loading$.next(false);
         }
@@ -108,7 +109,7 @@ export class PurchaseComponent implements OnInit {
         const rows: PurchaseRowModel[] = [];
         res.data.forEach(cart => {
           const row: PurchaseRowModel = {
-            id: cart.cart.id,
+            id: cart.cart.id.toString(),
             items: cart.cart.items as ItemRowViewModel[],
             purchaseDate: cart.cart.purchaseOrder.purchaseDate,
             supplierName: cart.cart.purchaseOrder.supplier.name,
@@ -131,7 +132,12 @@ export class PurchaseComponent implements OnInit {
   }
 
   onOpenAddPurchaseDialog() {
-    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, { data: { suppliers: this.supplierList, selectTitle: 'Suppliers', sectionTitle: BillType.Purchase } });
+    const dialogRef = this.dialog.open(AddPurchaseDialogComponent, {
+      data: {
+        suppliers: this.supplierList, selectTitle: 'Suppliers', sectionTitle: BillType.Purchase,
+        orderIds: this.rowData$.value.map(res => res.id)
+      }
+    });
 
     dialogRef.afterClosed().subscribe((result: AddPurchaseModel) => {
       if (result) {
@@ -141,7 +147,7 @@ export class PurchaseComponent implements OnInit {
           if (this.commonService.isResponseValid(res)) {
             const message = this.commonService.getMessage('Purchase successfully added', 'Success', MessageSeverity.Success);
             this.messages$.next(message);
-            this.commonService.printInvoice(res.data, result, BillType.Purchase);
+            this.commonService.printInvoice(result.orderId, result, BillType.Purchase);
             this.inventoryService.getItems(true);
             this.fetchPurchaseList();
           }

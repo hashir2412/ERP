@@ -31,7 +31,10 @@ export class AddPurchaseDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AddPurchaseDialogComponent>,
     private inventoryService: InventoryService, private commonService: CommonService,
-    @Inject(MAT_DIALOG_DATA) public data: { suppliers: ConsumerSupplierRowModel[], sectionTitle: BillType, selectTitle: string }) {
+    @Inject(MAT_DIALOG_DATA) public data: {
+      suppliers: ConsumerSupplierRowModel[], sectionTitle: BillType, selectTitle: string,
+      orderIds: string[]
+    }) {
   }
 
   onCancelClick() {
@@ -61,18 +64,24 @@ export class AddPurchaseDialogComponent implements OnInit {
   onSubmit(form: NgForm) {
     form.control.markAsDirty();
     if (form.valid) {
-      this.addPurchaseModel.subTotal = this.subTotal;
-      this.addPurchaseModel.total = this.total;
-      this.addPurchaseModel.items = this.addPurchaseModel.items.filter(
-        (thing, i, arr) => arr.findIndex(t => t.id === thing.id) === i
-      );
-      if (this.data.sectionTitle === BillType.Sale) {
-        if (this.validationForSalePassed()) {
+      if (!this.data.orderIds.find(res => res.toLowerCase() === this.addPurchaseModel.orderId.toLowerCase())) {
+        this.addPurchaseModel.subTotal = this.subTotal;
+        this.addPurchaseModel.total = this.total;
+        this.addPurchaseModel.items = this.addPurchaseModel.items.filter(
+          (thing, i, arr) => arr.findIndex(t => t.id === thing.id) === i
+        );
+        if (this.data.sectionTitle === BillType.Sale) {
+          if (this.validationForSalePassed()) {
+            this.dialogRef.close(this.addPurchaseModel);
+          }
+        } else {
           this.dialogRef.close(this.addPurchaseModel);
         }
       } else {
-        this.dialogRef.close(this.addPurchaseModel);
+        const message = this.commonService.getMessage(`Bill Number ${this.addPurchaseModel.orderId} already exists, please select a unique Bill Number to proceed`, 'Error', MessageSeverity.Error);
+        this.messages$.next(message);
       }
+      
     }
   }
 

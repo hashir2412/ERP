@@ -6,7 +6,7 @@ namespace ERP.Model.DbModel
     {
         public int SalesCartId { get; set; }
 
-        public int SalesOrderID { get; set; }
+        public string SalesOrderID { get; set; }
 
         public int ItemID { get; set; }
 

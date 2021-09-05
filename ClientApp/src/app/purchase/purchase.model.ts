@@ -7,6 +7,7 @@ export class AddPurchaseRequestModel {
     subTotal: number;
     total: number;
     purchaseDateTime: string;
+    orderId: string;
 }
 
 export class PurchaseCartModel{

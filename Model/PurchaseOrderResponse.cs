@@ -4,7 +4,7 @@ namespace ERP.Model
 {
     public class PurchaseOrderResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public ConsumerSupplierResponseModel Supplier { get; set; }
 
         public DateTime PurchaseDate { get; set; }

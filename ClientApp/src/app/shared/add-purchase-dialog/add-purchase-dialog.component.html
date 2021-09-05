@@ -8,6 +8,10 @@
                 optionLabel="name" [showClear]="true"></p-dropdown>
             <ng-container *ngIf="addPurchaseModel.supplier">
                 <mat-form-field style="width: 20%;">
+                    <mat-label>Bill No.</mat-label>
+                    <input matInput [(ngModel)]="addPurchaseModel.orderId" name="txt-date" required>
+                </mat-form-field>
+                <mat-form-field style="width: 20%;">
                     <mat-label>Invoice Date</mat-label>
                     <input matInput [(ngModel)]="addPurchaseModel.invoiceDateTime" name="txt-date" required
                         [matDatepicker]="picker2">
